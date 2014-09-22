@@ -1,8 +1,8 @@
 {
-  "name": "angular-seed",
-  "description": "A starter project for AngularJS",
+  "name": "environment-health",
+  "description": "Dropwizard health check dashboard",
   "version": "0.0.0",
-  "homepage": "https://github.com/angular/angular-seed",
+  "homepage": "https://github.com/markberridge/environment-health",
   "license": "MIT",
   "private": true,
   "dependencies": {

@@ -1,6 +1,29 @@
 var environmentsApp = angular.module('environmentsApp', [])
 
-environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", function($scope, $http) {
+environmentsApp.factory('pollingService', ['$http', function($http){
+    var defaultPollingTime = 10000;
+    var polls = {};
+
+    return {
+        startPolling: function(name, url, pollingTime, callback) {
+            // Check to make sure poller doesn't already exist
+            if (!polls[name]) {
+                var poller = function() {
+                    $http.get(url).success(callback).error(callback);
+                }
+                poller();
+                polls[name] = setInterval(poller, pollingTime || defaultPollingTime);
+            }
+        },
+
+        stopPolling: function(name) {
+            clearInterval(polls[name]);
+            delete polls[name];
+        }
+    }
+}]);
+
+environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", "pollingService", function($scope, $http, pollingService) {
 	
 	function App(name, url, healthy, healthchecks) {
 	    this.name = name;
@@ -36,14 +59,13 @@ environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", function($sc
 					var appName = data.applications[i].name;
 					var appUrl = data.applications[i].url;
 					(function(envName, appName, appUrl, i) {
-						
 						var process = function(data, status) {
 							var healthy = (status == 200);
 							console.log(envName + ":" + appName + ":" + healthy);
 							$scope.envData[envName].applications[i] = new App(appName, appUrl, healthy, data);
 							$scope.updated = Date.now();
 						};
-						$http.get("/proxy/?url=" + appUrl).success(process).error(process);
+						pollingService.startPolling(envName + ":" + appName, "/proxy/?url=" + appUrl, null, process);
 						
 					})(envName, appName, appUrl, i);
 				}
