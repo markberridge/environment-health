@@ -1,0 +1,7 @@
+{"name":"TX01", "applications":[
+    {"name":"One", "url":"http://localhost:8881/healthcheck"},
+    {"name":"Two", "url":"http://localhost:8881/healthcheck"},
+    {"name":"Three", "url":"http://localhost:8881/healthcheck"},
+    {"name":"Four", "url":"http://localhost:8881/healthcheck"},
+    {"name":"Five", "url":"http://localhost:8881/healthcheck"}
+]}
