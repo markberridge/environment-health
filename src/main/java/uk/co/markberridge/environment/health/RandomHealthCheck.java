@@ -1,4 +1,4 @@
-package com.learndirect.environment.health;
+package uk.co.markberridge.environment.health;
 
 import com.codahale.metrics.health.HealthCheck;
 

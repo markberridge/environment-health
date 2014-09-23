@@ -1,4 +1,4 @@
-package com.learndirect.environment.health;
+package uk.co.markberridge.environment.health;
 
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
@@ -18,8 +18,7 @@ public class EnvironmentHealthApplication extends Application<Configuration> {
 
     public static void main(String... args) throws Exception {
         if (args.length == 0) {
-            String configFileName = "environment-health.yml";// new
-                                                             // OverrideConfig("environment-health.yml").getName();
+            String configFileName = "environment-health.yml";
             new EnvironmentHealthApplication().run(new String[] { "server", configFileName });
         } else {
             new EnvironmentHealthApplication().run(args);
@@ -40,12 +39,10 @@ public class EnvironmentHealthApplication extends Application<Configuration> {
     public void run(Configuration config, Environment environment) throws Exception {
 
         // Resources
-        // environment.jersey().register(new VersionResource(this));
         environment.jersey().register(new ProxyResource(new Client()));
 
         // Health Checks
         // environment.healthChecks().register("version", new
-        // ApplicationAndVersionHealthCheck(getName(), this));
         environment.healthChecks().register("healthy #1", new AlwaysHealthyHealthCheck());
         environment.healthChecks().register("healthy #2", new AlwaysHealthyHealthCheck());
         environment.healthChecks().register("healthy #3", new AlwaysHealthyHealthCheck());

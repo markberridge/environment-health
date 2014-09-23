@@ -1,4 +1,4 @@
-package com.learndirect.environment.health;
+package uk.co.markberridge.environment.health;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
