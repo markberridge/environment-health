@@ -25,11 +25,12 @@ environmentsApp.factory('pollingService', ['$http', function($http){
 
 environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", "pollingService", function($scope, $http, pollingService) {
 	
-	function App(name, url, healthy, healthchecks) {
+	function App(name, url, healthy, healthchecks, fellIll) {
 	    this.name = name;
 	    this.url = url;
 	    this.healthy = healthy;
 	    this.healthchecks = healthchecks;
+	    this.fellIll = fellIll;
 	}
 	
 	function Env(name) {
@@ -62,7 +63,14 @@ environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", "pollingServ
 						var process = function(data, status) {
 							var healthy = (status == 200);
 							console.log(envName + ":" + appName + ":" + healthy);
-							$scope.envData[envName].applications[i] = new App(appName, appUrl, healthy, data);
+							
+							//calculate the time at which we first reported unhealthy
+							var fellIll = null;
+							if(!healthy) {
+								fellIll = ($scope.envData[envName].applications[i] && $scope.envData[envName].applications[i].fellIll) || Date.now();
+							}
+							
+							$scope.envData[envName].applications[i] = new App(appName, appUrl, healthy, data, fellIll);
 							$scope.updated = Date.now();
 						};
 						pollingService.startPolling(envName + ":" + appName, "/proxy/?url=" + appUrl, null, process);

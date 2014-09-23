@@ -36,9 +36,13 @@
 		<h2 class="page-header" ng-repeat-start="env in envData">{{env.name}}</h2>
 		<h2>
 			<span ng-repeat="app in env.applications"> <a
-				style="margin-bottom: .5em" class="btn btn-lg"
+				style="margin-bottom:.5em;" class="btn btn-lg"
 				ng-class="app.healthy ? 'btn-success' : 'btn-danger'"
-				target="_healthcheck" ng-href="{{app.url}}">{{app.name}}</a>
+				target="_healthcheck" ng-href="{{app.url}}">{{app.name}}<br />
+				<span style="font-weight:normal;font-size:10px">
+				  <span ng-if="app.fellIll">{{(updated - app.fellIll) | date:'HH:mm:ss'}}</span>
+<!--                   <span ng-if="!app.fellIll">&nbsp;</span> -->
+				</span></a>
 			</span>
 		</h2>
 		<span ng-repeat-end></span>

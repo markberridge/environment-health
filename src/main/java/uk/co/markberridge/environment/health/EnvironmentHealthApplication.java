@@ -42,10 +42,10 @@ public class EnvironmentHealthApplication extends Application<Configuration> {
         environment.jersey().register(new ProxyResource(new Client()));
 
         // Health Checks
-        // environment.healthChecks().register("version", new
         environment.healthChecks().register("healthy #1", new AlwaysHealthyHealthCheck());
         environment.healthChecks().register("healthy #2", new AlwaysHealthyHealthCheck());
         environment.healthChecks().register("healthy #3", new AlwaysHealthyHealthCheck());
         environment.healthChecks().register("random", new RandomHealthCheck(50));
+        // environment.healthChecks().register("unhealthy", new AlwaysUnhealthyHealthCheck());
     }
 }
