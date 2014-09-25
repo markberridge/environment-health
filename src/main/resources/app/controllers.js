@@ -83,7 +83,7 @@ environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", "$modal", "p
 
     $scope.open = function (env, app) {
 	  var modalInstance = $modal.open({
-	    templateUrl: 'myModalContent.html',
+	    templateUrl: 'healthcheckModal.html',
 	    scope: $scope,
 	    controller: ModalInstanceCtrl,
 	    resolve: {
@@ -103,8 +103,6 @@ environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", "$modal", "p
 var ModalInstanceCtrl = function ($scope, $modalInstance, env, app) {
   $scope.env = env;
   $scope.app = app;
-  $scope.ok = function () {
-    $modalInstance.close();
-  };
-  console.log($scope);
+  $scope.healthchecks = JSON.stringify(app.healthchecks, null, 3);
+  $scope.time = new Date();
 };
