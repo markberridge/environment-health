@@ -1,4 +1,4 @@
-package uk.co.markberridge.environment.health;
+package uk.co.markberridge.environment.health.resource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -31,6 +31,6 @@ public class ProxyResource {
         ClientResponse response = client.resource(url).get(ClientResponse.class);
         int status = response.getStatus();
         String output = response.getEntity(String.class);
-        return Response.status(status).entity(output).build();
+        return Response.status(status).header("Access-Control-Allow-Origin", "*").entity(output).build();
     }
 }

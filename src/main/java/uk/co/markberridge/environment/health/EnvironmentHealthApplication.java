@@ -1,5 +1,6 @@
 package uk.co.markberridge.environment.health;
 
+import uk.co.markberridge.environment.health.resource.ProxyResource;
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.assets.AssetsBundle;
@@ -18,7 +19,7 @@ public class EnvironmentHealthApplication extends Application<Configuration> {
 
     public static void main(String... args) throws Exception {
         if (args.length == 0) {
-            String configFileName = "environment-health.yml";
+            String configFileName = new OverrideConfig("environment-health.yml").getName();
             new EnvironmentHealthApplication().run(new String[] { "server", configFileName });
         } else {
             new EnvironmentHealthApplication().run(args);
@@ -42,9 +43,7 @@ public class EnvironmentHealthApplication extends Application<Configuration> {
         environment.jersey().register(new ProxyResource(new Client()));
 
         // Health Checks
-        environment.healthChecks().register("healthy #1", new AlwaysHealthyHealthCheck());
-        environment.healthChecks().register("healthy #2", new AlwaysHealthyHealthCheck());
-        environment.healthChecks().register("healthy #3", new AlwaysHealthyHealthCheck());
+        environment.healthChecks().register("healthy", new AlwaysHealthyHealthCheck());
         environment.healthChecks().register("random", new RandomHealthCheck(50));
         // environment.healthChecks().register("unhealthy", new AlwaysUnhealthyHealthCheck());
     }
