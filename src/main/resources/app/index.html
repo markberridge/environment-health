@@ -3,59 +3,64 @@
 <!-- <meta http-equiv="refresh" content="10"> -->
 <title>Environments</title>
 <script src="angular/angular.js"></script>
+<script src="angular/ui-bootstrap-tpls-0.9.0.min.js"></script>
 <script src="services.js"></script>
 <script src="controllers.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-<link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 </head>
 <body role="document" ng-controller="EnvironmentsCtrl">
 
-	<!-- Fixed navbar -->
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-		<div class="container">
-			<div class="navbar-header">
-				<div class="navbar-brand" style="color: white">Environments</div>
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li><a target="_blank"
-						href="http://ufid-man1/dokuwiki/doku.php/environments_and_tests:s2environmentdetails">Wiki</a></li>
-					<li><a target="_blank"
-						href="http://s2vldevjenc01.npd.learndirect.com/jenkins/">Jenkins</a></li>
-				</ul>
-			</div>
-			<!--/.nav-collapse -->
-		</div>
-	</div>
+  <!-- Fixed navbar -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <div class="navbar-brand" style="color: white">Environments</div>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li><a target="_blank"
+            href="http://ufid-man1/dokuwiki/doku.php/environments_and_tests:s2environmentdetails">Wiki</a></li>
+          <li><a target="_blank" href="http://s2vldevjenc01.npd.learndirect.com/jenkins/">Jenkins</a></li>
+        </ul>
+      </div>
+      <!--/.nav-collapse -->
+    </div>
+  </div>
 
-	<br />
-	<br />
+  <br />
+  <br />
 
-	<div class="container theme-showcase" role="main">
+  <div class="container theme-showcase" role="main">
 
-		<h2 class="page-header" ng-repeat-start="env in envData">{{env.name}}</h2>
-		<h2>
-			<span ng-repeat="app in env.applications"> <a
-				style="margin-bottom:.5em;" class="btn btn-lg"
-				ng-class="app.healthy ? 'btn-success' : 'btn-danger'"
-				target="_healthcheck" ng-href="{{app.url}}">{{app.name}}<br />
-				<span style="font-weight:normal;font-size:10px">
-				  <span ng-if="app.fellIll">{{(updated - app.fellIll) | date:'HH:mm:ss'}}</span>
-<!--                   <span ng-if="!app.fellIll">&nbsp;</span> -->
-				</span></a>
-			</span>
-		</h2>
-		<span ng-repeat-end></span>
+    <h2 class="page-header" ng-repeat-start="env in envData">{{env.name}}</h2>
+    <h2>
+      <span ng-repeat="app in env.applications"> <a style="margin-bottom: .5em;" class="btn btn-lg"
+        ng-class="app.healthy ? 'btn-success' : 'btn-danger'" ng-click="open(env, app)">{{app.name}}<br /> <span
+          style="font-weight: normal; font-size: 10px"> <span ng-if="app.fellIll">{{(updated -
+              app.fellIll) | date:'HH:mm:ss'}}</span>
+        </span></a>
+      </span>
+    </h2>
+    <span ng-repeat-end></span>
 
-		<p style="margin-top: 2em">last updated: {{updated |
-			date:'yyyy-MM-dd HH:mm:ss'}}</p>
+    <p style="margin-top: 2em">last updated: {{updated | date:'yyyy-MM-dd HH:mm:ss'}}</p>
 
-	</div>
+  </div>
 
-	<!-- Placed at the end of the document so the pages load faster -->
-	<script
-		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"
-		defer></script>
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/ng-template" id="myModalContent.html">
+    <div class="modal-header">
+      <h3 class="modal-title">{{env.name}} :: {{app.name}}</h3>
+    </div>
+    <div class="modal-body">
+      <b>{{app.healthchecks}}</b>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="ok()">OK</button>
+    </div>
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" defer></script>
 
 </body>
 </html>

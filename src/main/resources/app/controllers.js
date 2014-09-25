@@ -1,4 +1,4 @@
-var environmentsApp = angular.module('environmentsApp', [])
+var environmentsApp = angular.module('environmentsApp', ['ui.bootstrap'])
 
 environmentsApp.factory('pollingService', ['$http', function($http){
     var defaultPollingTime = 10000;
@@ -23,7 +23,7 @@ environmentsApp.factory('pollingService', ['$http', function($http){
     }
 }]);
 
-environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", "pollingService", function($scope, $http, pollingService) {
+environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", "$modal", "pollingService", function($scope, $http, $modal, pollingService) {
 	
 	function App(name, url, healthy, healthchecks, fellIll) {
 	    this.name = name;
@@ -80,4 +80,31 @@ environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", "pollingServ
 			});
 		}
 	});
+
+    $scope.open = function (env, app) {
+	  var modalInstance = $modal.open({
+	    templateUrl: 'myModalContent.html',
+	    scope: $scope,
+	    controller: ModalInstanceCtrl,
+	    resolve: {
+		  env: function(){
+		    return env;
+		  },
+	      app: function(){
+	        return app;
+	      }
+	    }
+	  });
+    };
+	  
 } ]);
+
+
+var ModalInstanceCtrl = function ($scope, $modalInstance, env, app) {
+  $scope.env = env;
+  $scope.app = app;
+  $scope.ok = function () {
+    $modalInstance.close();
+  };
+  console.log($scope);
+};
