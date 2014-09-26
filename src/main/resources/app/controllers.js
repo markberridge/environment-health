@@ -31,6 +31,7 @@ environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", "$modal", "p
 	    this.healthy = healthy;
 	    this.healthchecks = healthchecks;
 	    this.fellIll = fellIll;
+	    this.warning = new Date() - fellIll < 30000;
 	}
 	
 	function Env(name) {
@@ -86,6 +87,7 @@ environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", "$modal", "p
 	    templateUrl: 'healthcheckModal.html',
 	    scope: $scope,
 	    controller: ModalInstanceCtrl,
+	    size: 'lg',
 	    resolve: {
 		  env: function(){
 		    return env;
