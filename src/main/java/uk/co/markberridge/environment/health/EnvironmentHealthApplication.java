@@ -1,5 +1,6 @@
 package uk.co.markberridge.environment.health;
 
+import uk.co.markberridge.environment.health.resource.PingResource;
 import uk.co.markberridge.environment.health.resource.ProxyResource;
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
@@ -41,6 +42,7 @@ public class EnvironmentHealthApplication extends Application<Configuration> {
 
         // Resources
         environment.jersey().register(new ProxyResource(new Client()));
+        environment.jersey().register(new PingResource());
 
         // Health Checks
         environment.healthChecks().register("healthy", new AlwaysHealthyHealthCheck());

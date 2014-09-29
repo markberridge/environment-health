@@ -52,8 +52,8 @@
   <script type="text/ng-template" id="healthcheckModal.html">
     <div class="modal-header">
       <h3 class="modal-title">{{env.name}} : {{app.name}} :
-        <span ng-if="app.healthy" class="label label-success">Healthy</span>
-        <span ng-if="!app.healthy" class="label label-danger">Unhealthy</span>
+        <a ng-if="app.healthy" class="label label-success" href="{{app.url}}" target="_blank">Healthy</a>
+        <a ng-if="!app.healthy" class="label label-danger" href="{{app.url}}" target="_blank">Unhealthy</a>
     </h3>
     </div>
     <div class="modal-body">
