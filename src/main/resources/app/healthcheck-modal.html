@@ -1,0 +1,10 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    {{env.name}} : {{app.name}} : <a ng-if="app.healthy" class="label label-success" href="{{app.url}}" target="_blank">Healthy</a>
+    <a ng-if="!app.healthy" class="label label-danger" href="{{app.url}}" target="_blank">Unhealthy</a>
+  </h3>
+</div>
+<div class="modal-body">
+  <pre>{{healthchecks}}</pre>
+</div>
+<div class="modal-footer" style="font-size: 10px">@ {{time | date:'yyyy-MM-dd HH:mm:ss'}}</div>

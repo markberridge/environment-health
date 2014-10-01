@@ -36,9 +36,9 @@
     <h2 class="page-header" ng-repeat-start="env in envData">{{env.name}}</h2>
     <h2>
       <span ng-repeat="app in env.applications"> <a style="margin-bottom: .5em;" class="btn btn-lg"
-        ng-class="(app.healthy ? 'btn-success' : (app.warning ? 'btn-warning' : 'btn-danger'))" ng-click="open(env, app)">{{app.name}}<br /> <span
-          style="font-weight: normal; font-size: 10px"> <span ng-if="!app.warning && app.fellIll">{{(updated -
-              app.fellIll) | date:'HH:mm:ss'}}</span>
+        ng-class="(app.healthy ? 'btn-success' : (app.warning ? 'btn-warning' : 'btn-danger'))"
+        ng-click="open(env, app)">{{app.name}}<br /> <span style="font-weight: normal; font-size: 10px"> <span
+            ng-if="!app.warning && app.fellIll">{{(updated - app.fellIll) | date:'HH:mm:ss'}}</span>
         </span></a>
       </span>
     </h2>
@@ -49,20 +49,6 @@
   </div>
 
   <!-- Placed at the end of the document so the pages load faster -->
-  <script type="text/ng-template" id="healthcheckModal.html">
-    <div class="modal-header">
-      <h3 class="modal-title">{{env.name}} : {{app.name}} :
-        <a ng-if="app.healthy" class="label label-success" href="{{app.url}}" target="_blank">Healthy</a>
-        <a ng-if="!app.healthy" class="label label-danger" href="{{app.url}}" target="_blank">Unhealthy</a>
-    </h3>
-    </div>
-    <div class="modal-body">
-      <pre>{{healthchecks}}</pre>
-    </div>
-    <div class="modal-footer" style="font-size: 10px">
-	  @ {{time | date:'yyyy-MM-dd HH:mm:ss'}}
-    </div>
-  </script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" defer></script>
 
 </body>

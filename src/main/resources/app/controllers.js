@@ -84,7 +84,7 @@ environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", "$modal", "p
 
     $scope.open = function (env, app) {
 	  var modalInstance = $modal.open({
-	    templateUrl: 'healthcheckModal.html',
+	    templateUrl: 'healthcheck-modal.html',
 	    scope: $scope,
 	    controller: ModalInstanceCtrl,
 	    size: 'lg',
