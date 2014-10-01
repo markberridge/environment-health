@@ -1,6 +1,6 @@
 var environmentsApp = angular.module('environmentsApp', ['ui.bootstrap'])
 
-environmentsApp.factory('pollingService', ['$http', function($http){
+environmentsApp.factory('pollingService', function($http){
     var defaultPollingTime = 10000;
     var polls = {};
 
@@ -21,9 +21,9 @@ environmentsApp.factory('pollingService', ['$http', function($http){
             delete polls[name];
         }
     }
-}]);
+});
 
-environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", "$modal", "pollingService", function($scope, $http, $modal, pollingService) {
+environmentsApp.controller('EnvironmentsCtrl', function($scope, $http, $modal, pollingService) {
 	
 	function App(name, url, healthy, healthchecks, fellIll) {
 	    this.name = name;
@@ -99,12 +99,11 @@ environmentsApp.controller('EnvironmentsCtrl', [ "$scope", "$http", "$modal", "p
 	  });
     };
 	  
-} ]);
+});
 
 
 var ModalInstanceCtrl = function ($scope, $modalInstance, env, app) {
   $scope.env = env;
   $scope.app = app;
-  $scope.healthchecks = JSON.stringify(app.healthchecks, null, 3);
   $scope.time = new Date();
 };

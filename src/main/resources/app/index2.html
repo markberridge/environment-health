@@ -1,9 +1,9 @@
 <html ng-app="environmentsApp">
 <head>
-<title>Environments</title><script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<title>Environments</title>
 <script src="angular/angular.js"></script>
 <script src="angular/ui-bootstrap-tpls-0.9.0.min.js"></script>
-<script src="controllers.js"></script>
+<script src="controllers2.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 </head>
@@ -28,6 +28,8 @@
 
   <br />
   <br />
+  <br />
+  <br />
 
   <div class="container theme-showcase" role="main">
 
@@ -41,6 +43,11 @@
       </span>
     </h2>
     <span ng-repeat-end></span>
+    
+    <div>
+      Polled Request: <pre>{{data | json}}</pre>
+      Data: {{data.count}}
+    </div>
 
     <p style="margin-top: 2em">last updated: {{updated | date:'yyyy-MM-dd HH:mm:ss'}}</p>
 
