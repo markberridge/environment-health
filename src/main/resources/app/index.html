@@ -1,11 +1,16 @@
 <html ng-app="environmentsApp">
 <head>
-<title>Environments</title><script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="angular/angular.js"></script>
-<script src="angular/ui-bootstrap-tpls-0.9.0.min.js"></script>
+<title>Environments</title>
+
+<script src="components/angular/angular.min.js"></script>
+<script src="components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="components/jquery/jquery.min.js" defer></script>
+<script src="components/bootstrap/bootstrap.min.js" defer></script>
 <script src="controllers.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+<link rel="stylesheet" href="components/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="components/bootstrap/bootstrap-theme.min.css">
+
 </head>
 <body role="document" ng-controller="EnvironmentsCtrl">
 
@@ -45,10 +50,6 @@
     <p style="margin-top: 2em">last updated: {{updated | date:'yyyy-MM-dd HH:mm:ss'}}</p>
 
   </div>
-
-  <!-- Placed at the end of the document so the pages load faster -->
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" defer></script>
 
 </body>
 </html>

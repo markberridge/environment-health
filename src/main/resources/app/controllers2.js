@@ -9,7 +9,7 @@ environmentsApp.factory("pollingService", function ($http, $interval, $q) {
   var completed = $interval(function() {
     data.status = 'Running';
     
-    $http.get('envs/envs.json').then(function(r) {
+    $http.get('envs/envs2.json').then(function(r) {
       data.resp = "x";
       data.count++;
       console.log('Http\'s:' + data.count);

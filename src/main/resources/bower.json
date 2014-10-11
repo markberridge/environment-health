@@ -8,8 +8,16 @@
   "dependencies": {
     "angular": "1.2.x",
     "angular-route": "1.2.x",
-    "angular-loader": "1.2.x",
-    "angular-mocks": "~1.2.x",
-    "html5-boilerplate": "~4.3.0"
-  }
+    "angular-bootstrap": "0.9.x",
+    "bootstrap": "3.2.x",
+    "jquery": "2.1.x"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ]
 }
