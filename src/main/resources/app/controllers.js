@@ -63,7 +63,7 @@ environmentsApp.controller('EnvironmentsCtrl', function($scope, $http, $modal, p
 					(function(envName, appName, appUrl, i) {
 						var process = function(data, status) {
 							var healthy = (status == 200);
-							console.log(envName + ":" + appName + ":" + healthy);
+							console.log(envName + ':' + appName + ':' + healthy);
 							
 							//calculate the time at which we first reported unhealthy
 							var fellIll = null;
@@ -74,7 +74,7 @@ environmentsApp.controller('EnvironmentsCtrl', function($scope, $http, $modal, p
 							$scope.envData[envName].applications[i] = new App(appName, appUrl, healthy, data, fellIll);
 							$scope.updated = Date.now();
 						};
-						pollingService.startPolling(envName + ":" + appName, "/proxy/?url=" + appUrl, null, process);
+						pollingService.startPolling(envName + ':' + appName, '/proxy/?url=' + appUrl, null, process);
 						
 					})(envName, appName, appUrl, i);
 				}

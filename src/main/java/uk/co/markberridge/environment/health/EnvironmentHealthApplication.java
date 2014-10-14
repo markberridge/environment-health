@@ -46,7 +46,7 @@ public class EnvironmentHealthApplication extends Application<Configuration> {
 
         // Health Checks
         environment.healthChecks().register("healthy", new AlwaysHealthyHealthCheck());
-        environment.healthChecks().register("random", new RandomHealthCheck(50));
+        environment.healthChecks().register("random", new RandomHealthCheck(80));
         // environment.healthChecks().register("unhealthy", new AlwaysUnhealthyHealthCheck());
     }
 }
