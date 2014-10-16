@@ -15,13 +15,15 @@ environmentsApp.factory('healthService', function($http, $interval, $q) {
 	service.check = function(app) {
 		
 		var deferred = $q.defer();
-		$interval(function() {
+		var execute = function() {
 			$http.get('/proxy/?url=' + app.url).then(function(response) {
 				deferred.notify(response);
 			}, function(response) {
 				deferred.notify(response);
 			});
-		}, 10000);
+		};
+		$interval(execute, 10000);
+		execute();
 
 		return deferred.promise;
 	};
@@ -95,7 +97,6 @@ environmentsApp.controller('EnvironmentsCtrl', function($scope, $modal, configSe
 		$scope.data = envs.data;
 		processAll(envs.data);
 	});
-
 
     $scope.open = function (env, app) {
 	  var modalInstance = $modal.open({

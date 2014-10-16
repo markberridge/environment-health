@@ -9,5 +9,5 @@
   {"name":"TX13", "applications":[
     {"name":"One", "url":"http://localhost:8881/healthcheck"},
     {"name":"Two", "url":"http://localhost:8881/healthcheck"}
-  ]}  
+  ]}
 ]}
