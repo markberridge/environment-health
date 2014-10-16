@@ -1,29 +1,34 @@
-var environmentsApp = angular.module('environmentsApp', ['ui.bootstrap'])
+var environmentsApp = angular.module('environmentsApp', [ 'ui.bootstrap' ])
 
-environmentsApp.factory('pollingService', function($http){
-    var defaultPollingTime = 10000;
-    var polls = {};
-
-    return {
-        startPolling: function(name, url, pollingTime, callback) {
-            // Check to make sure poller doesn't already exist
-            if (!polls[name]) {
-                var poller = function() {
-                    $http.get(url).success(callback).error(callback);
-                }
-                poller();
-                polls[name] = setInterval(poller, pollingTime || defaultPollingTime);
-            }
-        },
-
-        stopPolling: function(name) {
-            clearInterval(polls[name]);
-            delete polls[name];
-        }
-    }
+environmentsApp.factory('configService', function($http) {
+	var service = {};
+	service.get = function() {
+		return $http.get('envs/envs.json');
+	};
+	return service;
 });
 
-environmentsApp.controller('EnvironmentsCtrl', function($scope, $http, $modal, pollingService) {
+//http://embed.plnkr.co/fSIm8B/script.js
+environmentsApp.factory('healthService', function($http, $interval, $q) {
+	var service = {};
+	
+	service.check = function(app) {
+		
+		var deferred = $q.defer();
+		$interval(function() {
+			$http.get('/proxy/?url=' + app.url).then(function(response) {
+				deferred.notify(response);
+			}, function(response) {
+				deferred.notify(response);
+			});
+		}, 10000);
+
+		return deferred.promise;
+	};
+	return service;
+});
+
+environmentsApp.controller('EnvironmentsCtrl', function($scope, $modal, configService, healthService) {
 	
 	function App(name, url, healthy, healthchecks, fellIll) {
 	    this.name = name;
@@ -38,49 +43,59 @@ environmentsApp.controller('EnvironmentsCtrl', function($scope, $http, $modal, p
 		 this.name = name;
 		 this.applications = {};
 	}
-	
+
+	if(!$scope.data) $scope.data = {}; 
 	if(!$scope.environments) $scope.environments = {}; 
 	if(!$scope.envData) $scope.envData = {}; 
 	
-	// get the list of environments
-	$http.get('envs/envs.json').success(function(data) {
-
+	var processAll = function(data) {
+		
 		// iterate over environments JSON to get environment configuration
 		for (var i = 0; i < data.environments.length; i++) {
-			$http.get('envs/' + data.environments[i] + '.json').success(function(data) {
 				
-				var envName = data.name;
-				$scope.environments[envName] = data;
-				$scope.envData[envName] = new Env(envName);
+			var env = data.environments[i];
+			var envName = env.name;
+			$scope.environments[envName] = env;
+			$scope.envData[envName] = new Env(envName);
+			
+			// iterate over each health check
+			for (var j = 0; j < env.applications.length; j++) {
 				
-				// iterate over each health check
-				for (var i = 0; i < data.applications.length; i++) {
+				// fix scope of data in loop using a closure
+				// (http://stackoverflow.com/questions/17244614/promise-in-a-loop)
+				var app = env.applications[j];
+				var appName = app.name;
+				var appUrl = app.url;
+				(function(envName, appName, appUrl, i, j) {
 					
-					// fix scope of data in loop using a closure
-					// (http://stackoverflow.com/questions/17244614/promise-in-a-loop)
-					var appName = data.applications[i].name;
-					var appUrl = data.applications[i].url;
-					(function(envName, appName, appUrl, i) {
-						var process = function(data, status) {
-							var healthy = (status == 200);
-							console.log(envName + ':' + appName + ':' + healthy);
-							
-							//calculate the time at which we first reported unhealthy
-							var fellIll = null;
-							if(!healthy) {
-								fellIll = ($scope.envData[envName].applications[i] && $scope.envData[envName].applications[i].fellIll) || Date.now();
-							}
-							
-							$scope.envData[envName].applications[i] = new App(appName, appUrl, healthy, data, fellIll);
-							$scope.updated = Date.now();
-						};
-						pollingService.startPolling(envName + ':' + appName, '/proxy/?url=' + appUrl, null, process);
+					var process = function(response) {
 						
-					})(envName, appName, appUrl, i);
-				}
-			});
+						var healthy = (response.status == 200);
+						console.log(envName + ':' + appName + ':' + healthy);
+						
+						//calculate the time at which we first reported unhealthy
+						var fellIll = null;
+						if(!healthy) {
+							fellIll = ($scope.envData[envName].applications[j] && $scope.envData[envName].applications[j].fellIll) || Date.now();
+						}
+						
+						$scope.envData[envName].applications[j] = new App(appName, appUrl, healthy, response.data, fellIll);
+						$scope.updated = Date.now();
+					};
+					
+					healthService.check(env.applications[i]).then({}, {}, process);
+					
+				})(envName, appName, appUrl, i, j);
+			}
 		}
+	};
+	
+	configService.get().then(function(envs) {
+		console.log('raw config: ' + JSON.stringify(envs.data));
+		$scope.data = envs.data;
+		processAll(envs.data);
 	});
+
 
     $scope.open = function (env, app) {
 	  var modalInstance = $modal.open({
@@ -98,9 +113,8 @@ environmentsApp.controller('EnvironmentsCtrl', function($scope, $http, $modal, p
 	    }
 	  });
     };
-	  
-});
 
+});
 
 var ModalInstanceCtrl = function ($scope, $modalInstance, env, app) {
   $scope.env = env;
