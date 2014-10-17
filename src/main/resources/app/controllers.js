@@ -31,39 +31,32 @@ environmentsApp.factory('healthService', function($http, $interval, $q) {
 
 environmentsApp.controller('EnvironmentsCtrl', function($scope, $modal, configService, healthService) {
 	
-	function App(name, url, healthy, healthchecks, fellIll) {
-	    this.name = name;
-	    this.url = url;
-	    this.healthy = healthy;
-	    this.healthchecks = healthchecks;
-	    this.fellIll = fellIll;
-	    this.warning = new Date() - fellIll < 30000;
-	}
-	
-	function Env(name) {
-		 this.name = name;
-		 this.applications = {};
-	}
-
-	var processAll = function(data) {
+	var process = function(data) {
+		
+		function App(name, url, healthy, healthchecks, fellIll) {
+		    this.name = name;
+		    this.url = url;
+		    this.healthy = healthy;
+		    this.healthchecks = healthchecks;
+		    this.fellIll = fellIll;
+		    this.warning = new Date() - fellIll < 30000;
+		}
 		
 		// iterate over environments JSON to get environment configuration
 		for (var i = 0; i < data.environments.length; i++) {
-				
 			var env = data.environments[i];
-			var envName = env.name;
-			$scope.data.environments[i] = new Env(envName);
 			
 			// iterate over applications and call health checks
 			for (var j = 0; j < env.applications.length; j++) {
+				var app =  env.applications[j];
 				
 				// fix scope of data in loop using a closure (http://stackoverflow.com/questions/17244614/promise-in-a-loop)
-				(function(envName, appName, appUrl, i, j) {
+				(function(env, app, i, j) {
 					
-					healthService.check(appUrl).then({}, {}, function(response) {
+					healthService.check(app.url).then({}, {}, function(response) {
 						
 						var healthy = (response.status == 200);
-						console.log(envName + ':' + appName + ':' + healthy);
+						console.log(env.name + ':' + app.name + ':' + healthy);
 						
 						//calculate the time at which we first reported unhealthy
 						var fellIll = null;
@@ -72,11 +65,11 @@ environmentsApp.controller('EnvironmentsCtrl', function($scope, $modal, configSe
 									$scope.data.environments[i].applications[j].fellIll) || Date.now();
 						}
 						
-						$scope.data.environments[i].applications[j] = new App(appName, appUrl, healthy, response.data, fellIll);
+						$scope.data.environments[i].applications[j] = new App(app.name, app.url, healthy, response.data, fellIll);
 						$scope.updated = Date.now();
 					});
 					
-				})(envName, env.applications[j].name, env.applications[j].url, i, j);
+				})(env, app, i, j);
 			}
 		}
 	};
@@ -84,7 +77,7 @@ environmentsApp.controller('EnvironmentsCtrl', function($scope, $modal, configSe
 	configService.get().then(function(envs) {
 		console.log('raw config: ' + JSON.stringify(envs.data));
 		$scope.data = envs.data;
-		processAll(envs.data);
+		process(envs.data);
 	});
 
     $scope.open = function (env, app) {
@@ -103,7 +96,6 @@ environmentsApp.controller('EnvironmentsCtrl', function($scope, $modal, configSe
 	    }
 	  });
     };
-
 });
 
 var ModalInstanceCtrl = function ($scope, $modalInstance, env, app) {
