@@ -36,7 +36,7 @@
 
   <div class="container theme-showcase" role="main">
 
-    <h2 class="page-header" ng-repeat-start="env in envData">{{env.name}}</h2>
+    <h2 class="page-header" ng-repeat-start="env in data.environments">{{env.name}}</h2>
     <h2>
       <span ng-repeat="app in env.applications"> <a style="margin-bottom: .5em;" class="btn btn-lg"
         ng-class="(app.healthy ? 'btn-success' : (app.warning ? 'btn-warning' : 'btn-danger'))"
