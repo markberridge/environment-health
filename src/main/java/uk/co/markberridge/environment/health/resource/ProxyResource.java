@@ -36,7 +36,7 @@ public class ProxyResource {
         } catch (Exception e) {
             String m = "The health check is not available: " + url;
             log.info(m, e);
-            return Response.status(500).header("Access-Control-Allow-Origin", "*").entity(m).build();
+            return Response.status(404).header("Access-Control-Allow-Origin", "*").entity(m).build();
         }
     }
 }
