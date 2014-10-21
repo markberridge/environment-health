@@ -13,6 +13,7 @@ import org.junit.ClassRule;
 import org.junit.Test;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
@@ -42,6 +43,22 @@ public class ProxyResourceTest {
     @Test
     public void test500() {
         assertProxy(500, "{'data':'500'}");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testConnectionException() {
+
+        when(response.getEntity(String.class)).thenThrow(ClientHandlerException.class);
+
+        ClientResponse clientResponse = resources.client()
+                                                 .resource("/proxy")
+                                                 .queryParam("url", "http://www.example.com")
+                                                 .type(MediaType.TEXT_PLAIN)
+                                                 .get(ClientResponse.class);
+
+        assertThat(clientResponse.getStatus()).isEqualTo(500);
+        assertThat(clientResponse.getEntity(String.class)).isEqualTo("The health check is not available: http://www.example.com");
     }
 
     private void assertProxy(int status, String entity) {

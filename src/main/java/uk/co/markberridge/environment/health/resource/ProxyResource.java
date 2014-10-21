@@ -28,9 +28,15 @@ public class ProxyResource {
     @GET
     public Response proxy(@QueryParam("url") String url) throws Exception {
         log.info("requesting {}", url);
-        ClientResponse response = client.resource(url).get(ClientResponse.class);
-        int status = response.getStatus();
-        String output = response.getEntity(String.class);
-        return Response.status(status).header("Access-Control-Allow-Origin", "*").entity(output).build();
+        try {
+            ClientResponse response = client.resource(url).get(ClientResponse.class);
+            int status = response.getStatus();
+            String output = response.getEntity(String.class);
+            return Response.status(status).header("Access-Control-Allow-Origin", "*").entity(output).build();
+        } catch (Exception e) {
+            String m = "The health check is not available: " + url;
+            log.info(m, e);
+            return Response.status(500).header("Access-Control-Allow-Origin", "*").entity(m).build();
+        }
     }
 }
