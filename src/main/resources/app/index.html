@@ -41,7 +41,7 @@
       <span ng-repeat="app in env.applications"> <a style="margin-bottom: .5em;" class="btn btn-lg"
         ng-class="(app.healthy ? 'btn-success' : (app.warning ? 'btn-warning' : 'btn-danger'))"
         ng-click="open(env, app)">{{app.name}}<br /> <span style="font-weight: normal; font-size: 10px"> <span
-            ng-if="!app.warning && app.fellIll">{{(updated - app.fellIll) | date:'HH:mm:ss'}}</span>
+            ng-if="!app.warning && app.fellIll">{{(updated - app.fellIll) | date:'HH:mm'}}</span>
         </span></a>
       </span>
     </h2>
