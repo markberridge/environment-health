@@ -1,3 +1,5 @@
+"use strict";
+
 var environmentsApp = angular.module('environmentsApp', [ 'ui.bootstrap' ]);
 
 environmentsApp.factory('configService', function($http) {
