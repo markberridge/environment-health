@@ -1,5 +1,9 @@
 "use strict";
 
+if(typeof console === "undefined") {
+  console = {log: function() {}};
+}
+
 var environmentsApp = angular.module('environmentsApp', [ 'ui.bootstrap' ]);
 
 environmentsApp.factory('configService', function($http) {
@@ -73,8 +77,7 @@ environmentsApp
                             // unhealthy
                             var fellIll = null;
                             if (!healthy) {
-                              fellIll = ($scope.data.environments[i].applications[j] && $scope.data.environments[i].applications[j].fellIll)
-                                  || Date.now();
+                              fellIll = ($scope.data.environments[i].applications[j] && $scope.data.environments[i].applications[j].fellIll) || Date.now();
                             }
 
                             $scope.data.environments[i].applications[j] = new App(app.name, app.url, healthy,
