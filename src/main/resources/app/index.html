@@ -13,7 +13,6 @@
 
 </head>
 <body role="document" ng-controller="EnvironmentsCtrl">
-
   <!-- Fixed navbar -->
   <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
@@ -25,6 +24,7 @@
           <li><a target="_blank"
             href="http://ufid-man1/dokuwiki/doku.php/environments_and_tests:s2environmentdetails">Wiki</a></li>
           <li><a target="_blank" href="http://s2vldevjenc01.npd.learndirect.com/jenkins/">Jenkins</a></li>
+          <li><a data-ng-init="smallView=false" data-ng-click="smallView=!smallView" href="#">({{smallView ? '+' : '-' }})</a></li>
         </ul>
       </div>
       <!--/.nav-collapse -->
@@ -34,9 +34,8 @@
   <br />
   <br />
 
-  <div class="container theme-showcase" role="main">
-
-    <h2 class="page-header" ng-repeat-start="env in data.environments">{{env.name}}</h2>
+  <div ng-if="smallView" class="container theme-showcase" role="main">
+    <h2  class="page-header" ng-repeat-start="env in data.environments">{{env.name}}</h2>
     <h2>
       <span ng-repeat="app in env.applications"> <a style="margin-bottom: .5em;" class="btn btn-lg"
         ng-class="(app.healthy ? 'btn-success' : (app.warning ? 'btn-warning' : 'btn-danger'))"
@@ -47,6 +46,30 @@
     </h2>
     <span ng-repeat-end></span>
 
+    <p style="margin-top: 2em">last updated: {{updated | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+
+  </div>
+  <div ng-if="!smallView" class="container theme-showcase" role="main">
+ 	  <h2 class="page-header" >Environments</h2>
+      <span ng-repeat="env in data.environments"> 
+        <a style="margin-bottom: .5em;" class="btn btn-lg" 
+        ng-class="'btn-' + getStatus(env)"
+        >{{env.name}}<br /> <span style="font-weight: normal; font-size: 10px"> <span
+            ng-if="!env.warning && env.fellIll">{{(updated - app.fellIll) | date:'HH:mm'}}</span>
+        </span></a>
+      </span>
+
+      <div ng-repeat="env in data.environments"> 
+      	<div ng-if="getStatus(env) == 'error'" > 
+        <h2 class="page-header" >{{env.name}}</h2>
+        <span ng-repeat="app in env.applications"> <a style="margin-bottom: .5em;" class="btn btn-lg"
+          ng-class="(app.healthy ? 'btn-success' : (app.warning ? 'btn-warning' : 'btn-danger'))"
+          ng-click="open(env, app)">{{app.name}}<br /> <span style="font-weight: normal; font-size: 10px"> <span
+            ng-if="!app.warning && app.fellIll">{{(updated - app.fellIll) | date:'HH:mm'}}</span>
+        </span></a>
+      </span>
+      </div>
+    </div>
     <p style="margin-top: 2em">last updated: {{updated | date:'yyyy-MM-dd HH:mm:ss'}}</p>
 
   </div>

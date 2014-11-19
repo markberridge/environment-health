@@ -112,6 +112,20 @@ environmentsApp
               }
             });
           };
+          $scope.getStatus = function(env) {
+          	var warning = false, error = false;
+          	for(var i in env.applications){
+          		var app = env.applications[i];
+          		
+          		if(app.warning){
+          		  warning = true;
+          		} 
+          		if(!app.warning && !app.healthy){
+          		  error = true;
+          		} 
+          	}
+            return !warning & !error ? 'success' : (warning ? 'warning' : 'danger'); 
+          };
         });
 
 var ModalInstanceCtrl = function($scope, $modalInstance, env, app) {
