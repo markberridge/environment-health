@@ -24,7 +24,7 @@
           <li><a target="_blank"
             href="http://ufid-man1/dokuwiki/doku.php/environments_and_tests:s2environmentdetails">Wiki</a></li>
           <li><a target="_blank" href="http://s2vldevjenc01.npd.learndirect.com/jenkins/">Jenkins</a></li>
-          <li><a data-ng-init="smallView=true" data-ng-click="smallView=!smallView" href="#">({{smallView ? '+' : '-' }})</a></li>
+          <li><a data-ng-init="smallView=false" data-ng-click="smallView=!smallView" href="#">({{smallView ? '+' : '-' }})</a></li>
         </ul>
       </div>
       <!--/.nav-collapse -->
@@ -37,7 +37,7 @@
   <div ng-if="smallView" class="container theme-showcase" role="main">
     <h2  class="page-header" ng-repeat-start="env in data.environments">{{env.name}}</h2>
     <h2>
-      <span  ng-repeat="app in env.applications"> <a style="margin-bottom: .5em;" class="btn btn-lg"
+      <span ng-repeat="app in env.applications"> <a style="margin-bottom: .5em;" class="btn btn-lg"
         ng-class="(app.healthy ? 'btn-success' : (app.warning ? 'btn-warning' : 'btn-danger'))"
         ng-click="open(env, app)">{{app.name}}<br /> <span style="font-weight: normal; font-size: 10px"> <span
             ng-if="!app.warning && app.fellIll">{{(updated - app.fellIll) | date:'HH:mm'}}</span>
