@@ -1,12 +1,13 @@
 package uk.co.markberridge.environment.health;
 
-import uk.co.markberridge.environment.health.resource.PingResource;
-import uk.co.markberridge.environment.health.resource.ProxyResource;
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import uk.co.markberridge.environment.health.resource.ConfigResource;
+import uk.co.markberridge.environment.health.resource.PingResource;
+import uk.co.markberridge.environment.health.resource.ProxyResource;
 
 import com.sun.jersey.api.client.Client;
 
@@ -34,7 +35,7 @@ public class EnvironmentHealthApplication extends Application<Configuration> {
 
     @Override
     public void initialize(Bootstrap<Configuration> bootstrap) {
-        bootstrap.addBundle(new AssetsBundle("/app/"));
+        bootstrap.addBundle(new AssetsBundle("/app/", "/health/", "index.html"));
     }
 
     @Override
@@ -43,6 +44,7 @@ public class EnvironmentHealthApplication extends Application<Configuration> {
         // Resources
         environment.jersey().register(new ProxyResource(new Client()));
         environment.jersey().register(new PingResource());
+        environment.jersey().register(new ConfigResource());
 
         // Health Checks
         environment.healthChecks().register("healthy", new AlwaysHealthyHealthCheck());

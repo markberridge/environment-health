@@ -12,4 +12,7 @@ The application is configured in the file `environment-health.yml`.
 
 Environment Configuration
 -------------------------
-Configure the list of environments in the JSON file `src/main/resources/app/envs/envs.json`
+Configure the list of environments in the JSON file `environments.json`
+
+
+By default, the application is available at http://localhost:8880/health/

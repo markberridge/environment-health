@@ -9,7 +9,7 @@ var environmentsApp = angular.module('environmentsApp', [ 'ui.bootstrap' ]);
 environmentsApp.factory('configService', function($http) {
   var service = {};
   service.get = function() {
-    return $http.get('envs/envs.json');
+    return $http.get('/config/');
   };
   return service;
 });
