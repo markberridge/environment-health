@@ -60,7 +60,7 @@
       </span>
 
       <div ng-repeat="env in data.environments"> 
-      	<div ng-if="getStatus(env) == 'error'" > 
+      	<div ng-if="getStatus(env) == 'danger'" > 
         <h2 class="page-header" >{{env.name}}</h2>
         <span ng-repeat="app in env.applications"> <a style="margin-bottom: .5em;" class="btn btn-lg"
           ng-class="(app.healthy ? 'btn-success' : (app.warning ? 'btn-warning' : 'btn-danger'))"
