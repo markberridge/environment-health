@@ -8,7 +8,7 @@ A dropwizard and angular application to monitor yammer metrics health checks.
 
 Application Configuration
 -------------------------
-The application is configured in the file `environment-health.yml`.
+This application is configured in the file `environment-health.yml`.
 
 Environment Configuration
 -------------------------
@@ -16,3 +16,5 @@ Configure the list of environments in the JSON file `environments.json`
 
 
 By default, the application is available at http://localhost:8880/health/
+
+
