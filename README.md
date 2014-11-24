@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/markberridge/environment-health.png)](https://travis-ci.org/markberridge/environment-health)
+[![Coverage Status](https://coveralls.io/repos/markberridge/environment-health/badge.png)](https://coveralls.io/r/markberridge/environment-health)
 [![Code Climate](https://codeclimate.com/github/markberridge/environment-health.png)](https://codeclimate.com/github/markberridge/environment-health)
 
 environment-health
