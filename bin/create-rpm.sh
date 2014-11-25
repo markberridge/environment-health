@@ -12,14 +12,6 @@ APP_JAR=${APP_NAME}-*.jar
 APP_SERVICE_SCRIPT=bin/${APP_NAME}-service_redhat
 WORK_DIR=`pwd`
 
-# EXTRACT RELEASE AND BUILD NUMBER FROM THE ZIP FILE
-VERSION_NO=`echo ${APP_JAR} | sed -nr  's/environment-health-(.*)-SNAPSHOT.jar/\1/p'`
-
-if [ "$VERSION_NO" = "" ] ; then
-  echo "ERROR: Something went wrong in determining release and build number from ${APP_JAR}"
-  exit 1
-fi
-
 run_cmd() {
   $*
   if [[ $? -ne 0 ]]; then
@@ -43,6 +35,15 @@ rm -rf ../target/*.rpm
 mkdir -p ../target
 
 cd ../target
+
+# EXTRACT RELEASE AND BUILD NUMBER FROM THE ZIP FILE
+VERSION_NO=`echo ${APP_JAR} | sed -nr  's/environment-health-(.*)-SNAPSHOT.jar/\1/p'`
+
+if [ "$VERSION_NO" = "" ] ; then
+  echo "ERROR: Something went wrong in determining release and build number from ${APP_JAR}"
+  exit 1
+fi
+
 mkdir -p ldirect/dropwizard/${APP_NAME}
 mkdir -p etc/init.d/ var/log/dropwizard/
 echo "WORKDIR= ${WORK_DIR}"
