@@ -13,7 +13,7 @@ APP_SERVICE_SCRIPT=bin/${APP_NAME}-service_redhat
 WORK_DIR=`pwd`
 
 # EXTRACT RELEASE AND BUILD NUMBER FROM THE ZIP FILE
-VERSION_NO=`echo ${APP_JAR} | awk -F"/${APP_NAME}-" '{print $NF}' | awk -F'-' '{print $1}'`
+VERSION_NO=`echo ${APP_JAR} | sed -nr  's/environment-health-(.*).jar/\1/p'`
 
 if [ "$VERSION_NO" = "" ] ; then
   echo "ERROR: Something went wrong in determining release and build number from ${APP_JAR}"
