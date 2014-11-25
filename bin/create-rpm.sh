@@ -39,7 +39,7 @@ PUSH_TO_REPO=${2:-"false"}
 # Create target directory with contents
 ################
 # delete any old RPMs
-rm -rf ../target
+rm -rf ../target/*.rpm
 mkdir -p ../target
 
 cd ../target
