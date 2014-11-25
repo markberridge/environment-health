@@ -1,0 +1,114 @@
+#!/bin/sh
+#
+# chkconfig: - 86 14
+# description: environment health service
+# processname: java
+#
+
+### BEGIN INIT INFO
+# Provides: environment-health
+# Short-Description: start and stop environment health service
+# Description: environment health service
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+APP_NAME=environment-health
+LOGFILE=/var/log/dropwizard/${APP_NAME}.log
+APP_USERNAME=dwizard
+
+start()
+{
+    echo -n $"Starting environment-health service: "
+
+    PID=`ps -u $APP_USERNAME -f | grep " ${APP_NAME}" | awk '{print $2}'`
+    if [ "$PID" != "" ] ; then
+      echo "Already running - not starting again!"
+      exit 1
+    fi
+
+    su - dwizard -c "cd /ldirect/dropwizard/${APP_NAME}/ ; java -jar ${APP_NAME}.jar >> $LOGFILE 2>&1 &"
+    
+    sleep 5
+    PID=`ps -ef | grep java | grep ${APP_NAME} | awk '{print $2}'`
+    if [ "$PID" = "" ] ; then
+      echo "Error starting ${APP_NAME}! See log file $LOGFILE"
+      exit 1
+    fi
+    
+    echo "Done! See log file $LOGFILE"
+}
+
+stop()
+{
+    echo -n $"Shutting down environment health service: "
+    PID=`ps -ef | grep java | grep ${APP_NAME} | awk '{print $2}'`
+    if [ "$PID" != "" ] ; then
+      kill $PID
+      echo "Done!"
+    else
+      echo "Not running."
+      exit 0
+    fi
+
+    RETVAL=1
+    sleep=0
+    while [ $sleep -lt 30 -a $RETVAL -eq 1 ]; do
+        echo -n -e "\nwaiting for processes to stop";
+        sleep 2
+        sleep=`expr $sleep + 2`
+        PID=`ps -ef | grep java | grep ${APP_NAME} | awk '{print $2}'`
+        if [ "$PID" = '' ]; then
+            RETVAL=0
+        fi
+    done
+
+    # Still not dead... kill it
+    for id in $PID ; do
+       kill -9 $id 2>&1 >/dev/null
+       echo -e "\nForce killing $id"
+    done
+
+    count=0
+    pid=0
+    PID=`ps -ef | grep java | grep ${APP_NAME} | awk '{print $2}'`
+    if [ "$PID" == '' ]; then
+        RETVAL=0
+    fi
+ 
+    
+    if [ $RETVAL != 0 ] ; then
+        echo -e "\nTimeout: Shutdown command was sent, but process is still running with PID $PID"
+        exit 1
+    fi
+
+    echo
+    exit 0
+}
+
+restart()
+{
+    stop
+    start
+}
+
+case "$1" in
+    start|stop|restart)
+        $1
+        ;;
+    status)
+        PID=`ps -ef | grep java | grep ${APP_NAME} | awk '{print $2}'`
+        if [ "$PID" = "" ] ; then
+          echo "Not running"
+          exit 1
+        else
+          echo "${APP_NAME} running [$PID]"
+          exit 0
+        fi
+        ;;
+    *)
+	echo $"Usage: $0 {start|stop|status|restart}"
+	exit 2
+	;;
+esac
