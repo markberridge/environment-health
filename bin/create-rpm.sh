@@ -47,7 +47,7 @@ mkdir -p ldirect/dropwizard/${APP_NAME}
 mkdir -p etc/init.d/ var/log/dropwizard/
 echo "WORKDIR= ${WORK_DIR}"
 echo "APPJAR= ${APP_JAR}"
-cp ${WORK_DIR}/${APP_JAR} ldirect/dropwizard/${APP_NAME}/${APP_NAME}.jar
+cp ${APP_JAR} ldirect/dropwizard/${APP_NAME}/${APP_NAME}.jar
 cp ${WORK_DIR}/${APP_YML} ldirect/dropwizard/${APP_NAME}/
 cp ${WORK_DIR}/${APP_SERVICE_SCRIPT} etc/init.d/${APP_NAME}
 chmod +x etc/init.d/${APP_NAME}
