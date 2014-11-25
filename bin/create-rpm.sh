@@ -28,7 +28,6 @@ run_cmd() {
   fi    
 }
 
-
 # run the script relative to the script dir
 cd `dirname $0`
 
@@ -47,7 +46,7 @@ cd ../target
 mkdir -p ldirect/dropwizard/${APP_NAME}
 mkdir -p etc/init.d/ var/log/dropwizard/
 cp ${WORK_DIR}/${APP_JAR} ldirect/dropwizard/${APP_NAME}/${APP_NAME}.jar
-#cp ${WORK_DIR}/${APP_YML} ldirect/dropwizard/${APP_NAME}/
+cp ${WORK_DIR}/${APP_YML} ldirect/dropwizard/${APP_NAME}/
 cp ${WORK_DIR}/${APP_SERVICE_SCRIPT} etc/init.d/${APP_NAME}
 chmod +x etc/init.d/${APP_NAME}
 
@@ -74,12 +73,13 @@ RPM_APP_PACKAGE_URL=${RPM_REPO_URL}/${RPM_APP_PACKAGE}-${VERSION_NO}-${BUILD_NUM
 RPM_DB_PACKAGE_URL=
 DELIM
 
+RPM_APP_PACKAGE_UNDERSCORES=${RPM_APP_PACKAGE/-/_}
 
 ################
 # Create app rpm
 ################
 echo "Creating application rpm..."
-run_cmd fpm -s dir -t rpm -n $RPM_APP_PACKAGE -v $VERSION_NO -a $RPM_ARCH \
+run_cmd fpm -s dir -t rpm -n $RPM_APP_PACKAGE_UNDERSCORES -v $VERSION_NO -a $RPM_ARCH \
   --rpm-user dwizard --rpm-group dwizard \
   --before-install ${WORK_DIR}/bin/pre-install.sh \
   --epoch 0 -C . --iteration ${BUILD_NUMBER} .
