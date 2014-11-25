@@ -76,13 +76,13 @@ RPM_APP_PACKAGE_URL=${RPM_REPO_URL}/${RPM_APP_PACKAGE}-${VERSION_NO}-${BUILD_NUM
 RPM_DB_PACKAGE_URL=
 DELIM
 
-RPM_APP_PACKAGE_UNDERSCORES=${RPM_APP_PACKAGE/-/_}
+#RPM_APP_PACKAGE_UNDERSCORES=${RPM_APP_PACKAGE/-/_}
 
 ################
 # Create app rpm
 ################
 echo "Creating application rpm..."
-run_cmd fpm -s dir -t rpm -n $RPM_APP_PACKAGE_UNDERSCORES -v $VERSION_NO -a $RPM_ARCH \
+run_cmd fpm -s dir -t rpm -n $RPM_APP_PACKAGE -v $VERSION_NO -a $RPM_ARCH \
   --rpm-user dwizard --rpm-group dwizard \
   --before-install ${WORK_DIR}/bin/pre-install.sh \
   --epoch 0 -C . --iteration ${BUILD_NUMBER} .
