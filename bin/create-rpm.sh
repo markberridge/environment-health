@@ -7,7 +7,7 @@ if [[ "${IS_M2RELEASEBUILD}" == "true" ]]; then
 fi
 
 APP_NAME=environment-health
-APP_JAR=dependency/${APP_NAME}-*.jar
+APP_JAR=${APP_NAME}-*.jar
 #APP_YML=config/${APP_NAME}.yml
 APP_SERVICE_SCRIPT=bin/${APP_NAME}-service_redhat
 WORK_DIR=`pwd`
