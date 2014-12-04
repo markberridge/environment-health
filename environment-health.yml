@@ -5,3 +5,6 @@ server:
   adminConnectors:
     - type: http
       port: 8881
+
+testMode: true
+cacheDuration: 2 seconds
