@@ -19,87 +19,88 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 
 public class ProxyService {
-	static final String METER_NAME = ProxyLoader.class.getName() + ".loads";
-	private static final Logger log = LoggerFactory.getLogger(ProxyService.class);
+    static final String METER_NAME = ProxyLoader.class.getName() + ".loads";
+    private static final Logger log = LoggerFactory.getLogger(ProxyService.class);
 
-	private LoadingCache<String, ResponseDto> responseCache;
+    private LoadingCache<String, ResponseDto> responseCache;
 
-	public ProxyService(MetricRegistry metricRegistry, Client client, Duration cacheDuration) {
-		this.responseCache = CacheBuilder.newBuilder()//
-				.expireAfterAccess(cacheDuration.toSeconds(), SECONDS) //
-				.maximumSize(100).build(new ProxyLoader(metricRegistry, client));
-	}
+    public ProxyService(MetricRegistry metricRegistry, Client client, Duration cacheDuration) {
+        this.responseCache = CacheBuilder.newBuilder()//
+                                         .expireAfterAccess(cacheDuration.toSeconds(), SECONDS)
+                                         .maximumSize(100)
+                                         .build(new ProxyLoader(metricRegistry, client));
+    }
 
-	public ResponseDto getProxyResponse(String url) {
-		try {
-			log.info("requesting {}", url);
-			return responseCache.get(url);
-		} catch (ExecutionException | UncheckedExecutionException e) {
-			String message = "The health check is not available at: " + url;
-			log.info(message, e);
-			return ResponseDto.notFound(message);
-		}
-	}
+    public ResponseDto getProxyResponse(String url) {
+        try {
+            log.info("requesting {}", url);
+            return responseCache.get(url);
+        } catch (ExecutionException | UncheckedExecutionException e) {
+            String message = "The health check is not available at: " + url;
+            log.info(message, e);
+            return ResponseDto.notFound(message);
+        }
+    }
 
-	private static class ProxyLoader extends CacheLoader<String, ResponseDto> {
+    private static class ProxyLoader extends CacheLoader<String, ResponseDto> {
 
-		private Client client;
-		private Meter meter;
+        private Client client;
+        private Meter meter;
 
-		public ProxyLoader(MetricRegistry metricRegistry, Client client) {
-			this.meter = metricRegistry.meter(METER_NAME);
-			this.client = client;
-		}
+        public ProxyLoader(MetricRegistry metricRegistry, Client client) {
+            this.meter = metricRegistry.meter(METER_NAME);
+            this.client = client;
+        }
 
-		@Override
-		public ResponseDto load(String url) throws Exception {
-			meter.mark();
-			ClientResponse response = client.resource(url).get(ClientResponse.class);
-			return ResponseDto.of(response.getStatus(), response.getEntity(String.class));
-		}
-	}
+        @Override
+        public ResponseDto load(String url) throws Exception {
+            meter.mark();
+            ClientResponse response = client.resource(url).get(ClientResponse.class);
+            return ResponseDto.of(response.getStatus(), response.getEntity(String.class));
+        }
+    }
 
-	public static class ResponseDto {
-		private String text;
-		private int status;
+    public static class ResponseDto {
+        private String text;
+        private int status;
 
-		private ResponseDto(String text, int status) {
-			this.text = text;
-			this.status = status;
-		}
+        private ResponseDto(String text, int status) {
+            this.text = text;
+            this.status = status;
+        }
 
-		public static ResponseDto of(int status, String message) {
-			return new ResponseDto(message, status);
-		}
+        public static ResponseDto of(int status, String message) {
+            return new ResponseDto(message, status);
+        }
 
-		public static ResponseDto notFound(String message) {
-			return new ResponseDto(message, 404);
-		}
+        public static ResponseDto notFound(String message) {
+            return new ResponseDto(message, 404);
+        }
 
-		public int getStatus() {
-			return status;
-		}
+        public int getStatus() {
+            return status;
+        }
 
-		public String getText() {
-			return text;
-		}
+        public String getText() {
+            return text;
+        }
 
-		@Override
-		public int hashCode() {
-			return Objects.hash(status, text);
-		}
+        @Override
+        public int hashCode() {
+            return Objects.hash(status, text);
+        }
 
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			ResponseDto other = (ResponseDto) obj;
-			return Objects.equals(status, other.status) && Objects.equals(text, other.text);
-		}
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            ResponseDto other = (ResponseDto) obj;
+            return Objects.equals(status, other.status) && Objects.equals(text, other.text);
+        }
 
-	}
+    }
 }

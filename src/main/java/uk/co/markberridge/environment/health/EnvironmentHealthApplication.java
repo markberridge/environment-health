@@ -14,9 +14,6 @@ import uk.co.markberridge.environment.health.service.ProxyService;
 
 import com.codahale.metrics.health.HealthCheckRegistry;
 import com.codahale.metrics.servlets.HealthCheckServlet;
-import com.google.common.collect.ContiguousSet;
-import com.google.common.collect.DiscreteDomain;
-import com.google.common.collect.Range;
 import com.sun.jersey.api.client.Client;
 
 /**
@@ -24,51 +21,51 @@ import com.sun.jersey.api.client.Client;
  */
 public class EnvironmentHealthApplication extends Application<HealthConfiguration> {
 
-	public static void main(String... args) throws Exception {
-		if (args.length == 0) {
-			String configFileName = new OverrideConfig("environment-health.yml").getName();
-			new EnvironmentHealthApplication().run(new String[] { "server", configFileName });
-		} else {
-			new EnvironmentHealthApplication().run(args);
-		}
-	}
+    public static void main(String... args) throws Exception {
+        if (args.length == 0) {
+            String configFileName = new OverrideConfig("environment-health.yml").getName();
+            new EnvironmentHealthApplication().run(new String[] { "server", configFileName });
+        } else {
+            new EnvironmentHealthApplication().run(args);
+        }
+    }
 
-	@Override
-	public String getName() {
-		return "environment-health";
-	}
+    @Override
+    public String getName() {
+        return "environment-health";
+    }
 
-	@Override
-	public void initialize(Bootstrap<HealthConfiguration> bootstrap) {
-		bootstrap.addBundle(new AssetsBundle("/app/", "/health/", "index.html"));
-	}
+    @Override
+    public void initialize(Bootstrap<HealthConfiguration> bootstrap) {
+        bootstrap.addBundle(new AssetsBundle("/app/", "/health/", "index.html"));
+    }
 
-	@Override
-	public void run(HealthConfiguration config, Environment environment) throws Exception {
+    @Override
+    public void run(HealthConfiguration config, Environment environment) throws Exception {
 
-		Client client = new JerseyClientBuilder(environment).build("proxyClient");
+        Client client = new JerseyClientBuilder(environment).build("proxyClient");
 
-		// Services
-		ProxyService proxyService = new ProxyService(environment.metrics(), client, config.getCacheDuration());
+        // Services
+        ProxyService proxyService = new ProxyService(environment.metrics(), client, config.getCacheDuration());
 
-		// Resources
-		environment.jersey().register(new ProxyResource(proxyService));
-		environment.jersey().register(new PingResource());
-		environment.jersey().register(new ConfigResource());
+        // Resources
+        environment.jersey().register(new ProxyResource(proxyService));
+        environment.jersey().register(new PingResource());
+        environment.jersey().register(new ConfigResource());
 
-		if (config.isTestMode()) {
-			for (Integer id : ContiguousSet.create(Range.closed(1, 7), DiscreteDomain.integers())) {
-				HealthCheckRegistry registry = new HealthCheckRegistry();
-				registry.register("randomHealthCheck" + id,  new RandomHealthCheck(80));
-				HealthCheckServlet servlet = new HealthCheckServlet(registry);
-				environment.servlets().addServlet("testHealthCheckServlet" + id, servlet).addMapping("/health" + id);
-			}
-		}
+        if (config.isTestMode()) {
+            for (int id = 1; id < 8; id++) {
+                HealthCheckRegistry registry = new HealthCheckRegistry();
+                registry.register("randomHealthCheck" + id, new RandomHealthCheck(80));
+                HealthCheckServlet servlet = new HealthCheckServlet(registry);
+                environment.servlets().addServlet("testHealthCheckServlet" + id, servlet).addMapping("/health" + id);
+            }
+        }
 
-		// Health Checks
-		environment.healthChecks().register("healthy", new AlwaysHealthyHealthCheck());
-		environment.healthChecks().register("random", new RandomHealthCheck(80));
-		// environment.healthChecks().register("unhealthy", new
-		// AlwaysUnhealthyHealthCheck());
-	}
+        // Health Checks
+        environment.healthChecks().register("healthy", new AlwaysHealthyHealthCheck());
+        environment.healthChecks().register("random", new RandomHealthCheck(80));
+        // environment.healthChecks().register("unhealthy", new
+        // AlwaysUnhealthyHealthCheck());
+    }
 }

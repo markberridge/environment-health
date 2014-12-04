@@ -16,22 +16,24 @@ import com.codahale.metrics.annotation.Timed;
 @Path("/proxy")
 public class ProxyResource {
 
-	private static final String ACCESS_CONTROL_ALLOW_ORIGIN_HEADER = "Access-Control-Allow-Origin";
+    private static final String ACCESS_CONTROL_ALLOW_ORIGIN_HEADER = "Access-Control-Allow-Origin";
 
-	private ProxyService proxyService;
+    private ProxyService proxyService;
 
-	public ProxyResource(ProxyService proxyService) {
-		this.proxyService = proxyService;
-	}
+    public ProxyResource(ProxyService proxyService) {
+        this.proxyService = proxyService;
+    }
 
-	@GET
-	@Timed
-	@Produces(APPLICATION_JSON)
-	public Response proxy(@QueryParam("url") String url) throws Exception {
-		ResponseDto response = proxyService.getProxyResponse(url);
+    @GET
+    @Timed
+    @Produces(APPLICATION_JSON)
+    public Response proxy(@QueryParam("url") String url) throws Exception {
+        ResponseDto response = proxyService.getProxyResponse(url);
 
-		return Response.status(response.getStatus())//
-				.header(ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")//
-				.entity(response.getText()).build();
-	}
+        return Response.status(response.getStatus())//
+                       .header(ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+                       //
+                       .entity(response.getText())
+                       .build();
+    }
 }

@@ -18,26 +18,29 @@ import com.sun.jersey.api.client.ClientResponse;
 
 public class ProxyResourceTest {
 
-	private static ProxyService proxyService = mock(ProxyService.class);
+    private static ProxyService proxyService = mock(ProxyService.class);
 
-	@ClassRule
-	public static final ResourceTestRule resources = ResourceTestRule.builder().addResource(new ProxyResource(proxyService)).build();
+    @ClassRule
+    public static final ResourceTestRule resources = ResourceTestRule.builder()
+                                                                     .addResource(new ProxyResource(proxyService))
+                                                                     .build();
 
-	@Before
-	public void resetMocks() {
-		reset(proxyService);
-	}
+    @Before
+    public void resetMocks() {
+        reset(proxyService);
+    }
 
-	@Test
-	public void testSuccess() {
-		when(proxyService.getProxyResponse("http://www.example.com")).thenReturn(ResponseDto.of(200, "message"));
+    @Test
+    public void testSuccess() {
+        when(proxyService.getProxyResponse("http://www.example.com")).thenReturn(ResponseDto.of(200, "message"));
 
-		ClientResponse clientResponse = resources.client().resource("/proxy")//
-				.queryParam("url", "http://www.example.com")//
-				.type(TEXT_PLAIN).get(ClientResponse.class);
+        ClientResponse clientResponse = resources.client().resource("/proxy")//
+                                                 .queryParam("url", "http://www.example.com")
+                                                 .type(TEXT_PLAIN)
+                                                 .get(ClientResponse.class);
 
-		assertThat(clientResponse.getStatus()).isEqualTo(200);
-		assertThat(clientResponse.getEntity(String.class)).isEqualTo("message");
-	}
+        assertThat(clientResponse.getStatus()).isEqualTo(200);
+        assertThat(clientResponse.getEntity(String.class)).isEqualTo("message");
+    }
 
 }
