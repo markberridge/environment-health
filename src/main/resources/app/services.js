@@ -1,15 +1,15 @@
+"use strict";
 
-
-environmentsApp.factory('configService', function($http) {
+environmentsApp.factory('configService', ['$http', function($http) {
   var service = {};
   service.get = function() {
     return $http.get('/config/');
   };
   return service;
-});
+}]);
 
 // http://embed.plnkr.co/fSIm8B/script.js
-environmentsApp.factory('healthService', function($http, $interval, $q) {
+environmentsApp.factory('healthService', ['$http', '$interval', '$q', function($http, $interval, $q) {
   var service = {};
   service.check = function(url) {
 
@@ -27,7 +27,7 @@ environmentsApp.factory('healthService', function($http, $interval, $q) {
     return deferred.promise;
   };
   return service;
-});
+}]);
 
 environmentsApp.factory('pollingService', ['$rootScope', 'configService', 'healthService', function($rootScope, configService, healthService){
 	var process = function(data) {
@@ -39,7 +39,7 @@ environmentsApp.factory('pollingService', ['$rootScope', 'configService', 'healt
           this.healthchecks = healthchecks;
           this.fellIll = fellIll;
           this.getTimeIll = function(){
-          	return new Date() - this.fellIll;
+          	return !healthy  ? new Date() - this.fellIll : 0;
           }
           this.warning = this.getTimeIll() < 30000;
         }
@@ -84,10 +84,7 @@ environmentsApp.factory('pollingService', ['$rootScope', 'configService', 'healt
 
               healthService
                   .check(app.url)
-                  .then(
-                      {},
-                      {},
-                      function(response) {
+                  .then({},{}, function(response) {
 
                         var healthy = (response.status == 200);
 
@@ -97,15 +94,14 @@ environmentsApp.factory('pollingService', ['$rootScope', 'configService', 'healt
                           fellIll = (data.environments[i].applications[j] && data.environments[i].applications[j].fellIll) || Date.now();
                         }
                         data.environments[i].applications[j] = new App(app.name, app.url, healthy, response.data, fellIll);
-                        console.log(env.name + ':' + app.name + ':' + fellIll, data.environments[i].applications[j].getTimeIll());
-						data.environments[i].status = getEnvStatus(data.environments[i]);
-						data.environments[i].fellIll = getEnvFellIll(data.environments[i]);
-						$rootScope.$broadcast('app-update', {updated: Date.now(), 
-															 data:    data, 
-															 env:     data.environments[i], 
-															 app:     data.environments[i].applications[j]});	
+                        console.log(env.name + ':' + app.name + ':' + fellIll + ". illFor:", data.environments[i].applications[j].getTimeIll());
+                        data.environments[i].status = getEnvStatus(data.environments[i]);
+                        data.environments[i].fellIll = getEnvFellIll(data.environments[i]);
+                        $rootScope.$broadcast('app-update', {updated: Date.now(), 
+                                                             data:    data, 
+                                                             env:     data.environments[i], 
+                                                             app:     data.environments[i].applications[j]});	
                       });
-
             })(env, app, i, j);
           }
         }

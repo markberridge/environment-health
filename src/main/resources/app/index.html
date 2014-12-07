@@ -16,6 +16,8 @@
                <ul class="nav navbar-nav">
                   <li data-ng-repeat="link in links">
                     <a target="_blank" href="{{link.url}}">{{link.name}}</a></li>
+               </ul>
+               <ul class="nav navbar-nav navbar-right">
                   <li><a href data-ng-click="toggleView()">({{compactView ? '+' : '-' }})</a></li>
                </ul>
             </div>
