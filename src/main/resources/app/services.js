@@ -130,7 +130,8 @@ environmentsApp.factory('pollingService', ['$rootScope', 'configService', 'healt
 
 
 if(window.location.href.indexOf("?mode=stubbed") > -1){
-	environmentsApp.factory('restService', ['$http','$q', function($http, $q) {
+	//Stub the api calls to provide demo functionality
+	environmentsApp.factory('restService', ['$q', function($q) {
 	  var service = {};
 	  service.get = function(url) {
 	    if(url.indexOf("/config") > -1){
