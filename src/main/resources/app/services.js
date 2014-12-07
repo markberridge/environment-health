@@ -155,7 +155,14 @@ if(window.location.href.indexOf("?mode=stubbed") > -1){
 	    }
 	    if(url.indexOf("/unhealthy") > -1){
 		    var response = 
-		    { data: {"randomHealthCheck5":{"healthy":false,"message": (number + "/80")}},
+		    { data: {"healthyHealthCheck":{"healthy":true,"message": ("12/80")}, "unHealthyHealthCheck":{ "healthy": false,
+        "message": "Error!",
+        "error": {
+            "message": "Error!",
+            "stack": [
+                "uk.co.markberridge.environment.health.dummyChecks.AlwaysUnhealthyHealthCheck.check(AlwaysUnhealthyHealthCheck.java:16)",
+                "com.codahale.metrics.health.HealthCheck.execute(HealthCheck.java:172)", "..."
+                ]}}},
 		      status: 500
 		    }
 	    }
