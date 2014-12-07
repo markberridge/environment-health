@@ -27,18 +27,21 @@ environmentsApp.run(['pollingService', function (pollingService){
 
 }]);
 
-environmentsApp.controller('NavCtrl', function($scope, $modal, $location) {
+environmentsApp.controller('NavCtrl', function($scope, $modal, $location, configService) {
     $scope.compactView = $location.path().indexOf('compact') > -1;
     $scope.toggleView = function() {
                           $scope.compactView = $location.path().indexOf('compact') < 0;
                           $location.path($scope.compactView ? '/compact' : '/exploded');
                         };
+    configService.get().then(function(result) {
+      $scope.links = result.data.links;
+	});
 });
 
 environmentsApp
     .controller(
         'EnvironmentsCtrl',
-        function($rootScope, $scope, $modal, configService, healthService, pollingService) {
+        function($rootScope, $scope, $modal, healthService, pollingService) {
           $scope.data = pollingService.getData();
           $scope.updated = pollingService.updated;
           

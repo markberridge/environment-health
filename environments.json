@@ -1,13 +1,14 @@
-{"environments":[
-  {"name":"TX01", "applications":[
-    {"name":"One", "url":"http://localhost:8880/health1"},
-    {"name":"Two", "url":"http://localhost:8880/health2"},
-    {"name":"Three", "url":"http://localhost:8880/health3"},
-    {"name":"Four", "url":"http://localhost:8880/health4"},
-    {"name":"Five", "url":"http://localhost:8880/health5"}
-  ]},
-  {"name":"TX13", "applications":[
-    {"name":"One", "url":"http://localhost:8880/health6"},
-    {"name":"Two", "url":"http://localhost:8880/health7"}
-  ]}
-]}
+{"environments": [
+  {"name": "TX01", "applications": [
+    {"name": "One",   "url": "http://localhost:8880/health1"},
+    {"name": "Two",   "url": "http://localhost:8880/health2"},
+    {"name": "Three", "url": "http://localhost:8880/health3"},
+    {"name": "Four",  "url": "http://localhost:8880/health4"},
+    {"name": "Five",  "url": "http://localhost:8880/health5"}]},
+  {"name": "TX13", "applications": [
+    {"name": "One",   "url": "http://localhost:8880/health6"},
+    {"name": "Two",   "url": "http://localhost:8880/health7"}]}],
+ "links": [
+    {"name": "Wiki",    "url": "http://www.wiki.com"},
+    {"name": "Jenkins", "url": "http://www.jenkins.com"},
+    {"name": "Jira",    "url": "http://www.jira.com"}]}
