@@ -1,0 +1,24 @@
+<div class="container theme-showcase" role="main">
+   <h2 class="page-header" >Environments</h2>
+   <span ng-repeat="env in data.environments"> 
+   <a style="margin-bottom: .5em;" ng-click="env.show = !env.show" class="btn btn-lg" 
+      ng-class="'btn-' + env.status"
+      >{{env.name}}<br /> <span style="font-weight: normal; font-size: 10px"> <span
+      ng-if="env.status == 'danger'">{{env.fellIll | date:'HH:mm:ss'}}</span>
+   </span></a>
+   </span>
+   <div ng-repeat="env in data.environments">
+      <div ng-if="env.status == 'danger' || env.show" >
+         <h2 class="page-header" >{{env.name}}</h2>
+         <span ng-repeat="app in env.applications"> <a style="margin-bottom: .5em;" class="btn btn-lg"
+            ng-class="(app.healthy ? 'btn-success' : (app.warning ? 'btn-warning' : 'btn-danger'))"
+            ng-click="open(env, app)">{{app.name}}<br /> <span style="font-weight: normal; font-size: 10px"> <span
+            ng-if="!app.healthy && app.getTimeIll()">{{app.getTimeIll() | date:'HH:mm:ss'}}</span>
+         </span></a>
+         </span>
+      </div>
+   </div>
+   <br />
+   <br />
+   <p style="margin-top: 2em">last updated: {{updated | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+</div>
