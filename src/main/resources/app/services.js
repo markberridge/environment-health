@@ -141,7 +141,7 @@ if(window.location.href.indexOf("?mode=stubbed") > -1){
 		              {"name": "TX02", "applications": [{"name": "Three","url": "http://localhost:8880/health3"}, {"name": "Four","url": "http://localhost:8880/health4"}, {"name": "Five","url": "http://localhost:8880/health5"}]},
 		              {"name": "TX03", "applications": [{"name": "Six","url": "http://localhost:8880/unhealthy"}]}
 		              ],
-		              "links": [{"name": "Wiki", "url": "http://www.wiki.com"},{"name": "Jenkins","url": "http://www.jenkins.com"}]},
+		              "links": [{"name": "Wiki", "url": "http://www.mediawiki.org/"},{"name": "Jenkins","url": "http://jenkins-ci.org/"}]},
 		      status: 200
 		    }
 	    }
