@@ -14,9 +14,8 @@
             </div>
             <div  ng-controller="NavCtrl" class="navbar-collapse collapse">
                <ul class="nav navbar-nav">
-                  <li><a target="_blank"
-                     href="http://ufid-man1/dokuwiki/doku.php/environments_and_tests:s2environmentdetails">Wiki</a></li>
-                  <li><a target="_blank" href="http://s2vldevjenc01.npd.learndirect.com/jenkins/">Jenkins</a></li>
+                  <li data-ng-repeat="link in links">
+                    <a target="_blank" href="{{link.url}}">{{link.name}}</a></li>
                   <li><a href data-ng-click="toggleView()">({{compactView ? '+' : '-' }})</a></li>
                </ul>
             </div>
