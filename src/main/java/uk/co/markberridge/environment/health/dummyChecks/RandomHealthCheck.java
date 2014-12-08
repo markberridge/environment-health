@@ -1,4 +1,4 @@
-package uk.co.markberridge.environment.health;
+package uk.co.markberridge.environment.health.dummyChecks;
 
 import com.codahale.metrics.health.HealthCheck;
 

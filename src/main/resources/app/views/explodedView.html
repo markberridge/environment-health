@@ -1,0 +1,13 @@
+<div  class="container theme-showcase" role="main">
+   <p data-ng-if="updated" class="small pull-right" style="margin-top: 3em">last updated: {{updated | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+   <h2  class="page-header" ng-repeat-start="env in data.environments">{{env.name}}</h2>
+   <h2>
+      <span ng-repeat="app in env.applications"> <a style="margin-bottom: .5em;" class="btn btn-lg"
+         ng-class="(app.healthy ? 'btn-success' : (app.warning ? 'btn-warning' : 'btn-danger'))"
+         ng-click="open(env, app)">{{app.name}}<br /> <span style="font-weight: normal; font-size: 10px"> <span
+         ng-if="!app.healthy && app.getTimeIll()">{{app.getTimeIll() | date:'HH:mm:ss'}}</span>
+      </span></a>
+      </span>
+   </h2>
+   <span ng-repeat-end></span>
+</div>
