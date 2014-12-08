@@ -1,0 +1,36 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    {{env.name}} : {{app.name}} : <a ng-if="app.healthy" class="label label-success" href="{{app.url}}" target="_blank">Healthy</a>
+    <a ng-if="!app.healthy" class="label label-danger" href="{{app.url}}" target="_blank">Unhealthy</a>
+  </h3>
+</div>
+<div class="modal-body">
+  <div data-ng-repeat="(key, value) in app.healthchecks">
+    <h4>{{key}}</h4>
+      <div class="row">
+        <div class="col-md-2"><strong>Health:</strong></div>
+        <div class="col-md-4"><a ng-if="value.healthy" class="label label-success" href="{{app.url}}" target="_blank">Healthy</a>
+        <a ng-if="!value.healthy" class="label label-danger" href="{{value.url}}" target="_blank">Unhealthy</a></div>
+      </div>
+      <div class="row" data-ng-if="value.message">
+        <div class="col-md-2"><strong>Message:</strong></div>
+        <div class="col-md-4">{{value.message}}</div> 
+      </div>
+ 	  <div data-ng-if="value.error" class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div role="tab" id="headingOne">
+          <span>
+            <a data-toggle="collapse" href data-parent="#accordion" data-target="#collapse{{$index}}" href="" aria-expanded="false" aria-controls="collapseOne">
+            <strong>Error Detail:</strong>
+            </a>
+          </span>
+          <div id="collapse{{$index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+              <pre >{{value.error.stack |json}}</pre>
+            </div>
+          </div>
+        </div>
+      </div>	
+    <hr/>
+  </div> <!-- end of loop -->
+</div>
+<div class="modal-footer" style="font-size: 10px">@ {{time | date:'yyyy-MM-dd HH:mm:ss'}}</div>

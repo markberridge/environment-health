@@ -4,101 +4,47 @@ if(typeof console === "undefined") {
   console = {log: function() {}};
 }
 
-var environmentsApp = angular.module('environmentsApp', [ 'ui.bootstrap' ]);
+var environmentsApp = angular.module('environmentsApp', [ 'ui.bootstrap', 'ngRoute' ]);
 
-environmentsApp.factory('configService', function($http) {
-  var service = {};
-  service.get = function() {
-    return $http.get('/config/');
-  };
-  return service;
-});
-
-// http://embed.plnkr.co/fSIm8B/script.js
-environmentsApp.factory('healthService', function($http, $interval, $q) {
-  var service = {};
-  service.check = function(url) {
-
-    var deferred = $q.defer();
-    var execute = function() {
-      $http.get('/proxy/?url=' + url).then(function(response) {
-        deferred.notify(response);
-      }, function(response) {
-        deferred.notify(response);
+environmentsApp.config(['$routeProvider', 
+  function($routeProvider) {
+    $routeProvider.
+      when('/compact', {
+        templateUrl: 'views/compactView.html' ,
+        controller: 'EnvironmentsCtrl'
+      }).
+      when('/exploded', {
+        templateUrl: 'views/explodedView.html' ,
+        controller: 'EnvironmentsCtrl'
+      }).
+      otherwise({
+        redirectTo: '/compact'
       });
-    };
-    $interval(execute, 10000);
-    execute();
+  }]);
 
-    return deferred.promise;
-  };
-  return service;
+environmentsApp.run(['pollingService', function (pollingService){
+	pollingService.startPolling();
+
+}]);
+
+environmentsApp.controller('NavCtrl', function($scope, $modal, $location) {
+    $scope.compactView = $location.path().indexOf('compact') > -1;
+    $scope.toggleView = function() {
+                          $scope.compactView = $location.path().indexOf('compact') < 0;
+                          $location.path($scope.compactView ? '/compact' : '/exploded');
+                        };
 });
 
 environmentsApp
     .controller(
         'EnvironmentsCtrl',
-        function($scope, $modal, configService, healthService) {
-
-          var process = function(data) {
-
-            function App(name, url, healthy, healthchecks, fellIll) {
-              this.name = name;
-              this.url = url;
-              this.healthy = healthy;
-              this.healthchecks = healthchecks;
-              this.fellIll = fellIll;
-              this.warning = new Date() - fellIll < 30000;
-            }
-
-            // iterate over environments JSON to get environment configuration
-            for ( var i = 0; i < data.environments.length; i++) {
-              var env = data.environments[i];
-
-              // iterate over applications and call health checks
-              for ( var j = 0; j < env.applications.length; j++) {
-                var app = env.applications[j];
-
-                // fix scope of data in loop using a closure
-                // (http://stackoverflow.com/questions/17244614/promise-in-a-loop)
-                (function(env, app, i, j) {
-
-                  healthService
-                      .check(app.url)
-                      .then(
-                          {},
-                          {},
-                          function(response) {
-
-                            var healthy = (response.status == 200);
-                            console.log(env.name + ':' + app.name + ':' + healthy);
-
-                            // calculate the time at which we first reported
-                            // unhealthy
-                            var fellIll = null;
-                            if (!healthy) {
-                              fellIll = ($scope.data.environments[i].applications[j] && $scope.data.environments[i].applications[j].fellIll) || Date.now();
-                            }
-
-                            $scope.data.environments[i].applications[j] = new App(app.name, app.url, healthy,
-                                response.data, fellIll);
-                            $scope.updated = Date.now();
-                          });
-
-                })(env, app, i, j);
-              }
-            }
-          };
-
-          configService.get().then(function(envs) {
-            console.log('raw config: ' + JSON.stringify(envs.data));
-            $scope.data = envs.data;
-            process(envs.data);
-          });
-
+        function($rootScope, $scope, $modal, configService, healthService, pollingService) {
+          $scope.data = pollingService.getData();
+          $scope.updated = pollingService.updated;
+          
           $scope.open = function(env, app) {
             var modalInstance = $modal.open({
-              templateUrl : 'healthcheck-modal.html',
+              templateUrl : 'views/appModal.html',
               scope : $scope,
               controller : ModalInstanceCtrl,
               size : 'lg',
@@ -112,24 +58,23 @@ environmentsApp
               }
             });
           };
-          $scope.getStatus = function(env) {
-          	var warning = false, error = false;
-          	for(var i in env.applications){
-          		var app = env.applications[i];
-          		
-          		if(app.warning){
-          		  warning = true;
-          		} 
-          		if(!app.warning && !app.healthy){
-          		  error = true;
-          		} 
-          	}
-            return !warning & !error ? 'success' : (warning ? 'warning' : 'danger'); 
-          };
+          
+          $scope.$on('app-update', function(event, args){
+               $scope.updated = args.updated;
+               $scope.data = args.data;
+		  });
         });
 
 var ModalInstanceCtrl = function($scope, $modalInstance, env, app) {
   $scope.env = env;
   $scope.app = app;
   $scope.time = new Date();
+  $scope.$on('app-update', function(event, args){
+    var updateIsForThisApplication = args.env.name == env.name && args.app.name == app.name;
+    if(updateIsForThisApplication){
+	  $scope.app = args.app;
+	  $scope.env = args.env;
+	  $scope.time = args.updated;
+  	}
+  });
 };

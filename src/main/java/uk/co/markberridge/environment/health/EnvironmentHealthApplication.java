@@ -6,6 +6,7 @@ import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import uk.co.markberridge.environment.health.dummyChecks.AlwaysHealthyHealthCheck;
+import uk.co.markberridge.environment.health.dummyChecks.AlwaysUnhealthyHealthCheck;
 import uk.co.markberridge.environment.health.dummyChecks.RandomHealthCheck;
 import uk.co.markberridge.environment.health.resource.ConfigResource;
 import uk.co.markberridge.environment.health.resource.PingResource;
@@ -56,7 +57,16 @@ public class EnvironmentHealthApplication extends Application<HealthConfiguratio
         if (config.isTestMode()) {
             for (int id = 1; id < 8; id++) {
                 HealthCheckRegistry registry = new HealthCheckRegistry();
-                registry.register("randomHealthCheck" + id, new RandomHealthCheck(80));
+                if(id ==4) {
+                	registry.register("Random Check" + id, new RandomHealthCheck(80));
+                	registry.register("Unhealthy Check 1", new AlwaysUnhealthyHealthCheck(true));
+                	registry.register("Healthy Check 1", new AlwaysHealthyHealthCheck());
+                	registry.register("Unhealthy Check 2", new AlwaysUnhealthyHealthCheck(false));
+                	registry.register("Healthy Check", new AlwaysHealthyHealthCheck("I am a message"));
+                	registry.register("Unhealthy Check 3", new AlwaysUnhealthyHealthCheck(true));
+                }else{
+                	registry.register("randomHealthCheck" + id, new RandomHealthCheck(80));
+                }
                 HealthCheckServlet servlet = new HealthCheckServlet(registry);
                 environment.servlets().addServlet("testHealthCheckServlet" + id, servlet).addMapping("/health" + id);
             }
@@ -65,7 +75,5 @@ public class EnvironmentHealthApplication extends Application<HealthConfiguratio
         // Health Checks
         environment.healthChecks().register("healthy", new AlwaysHealthyHealthCheck());
         environment.healthChecks().register("random", new RandomHealthCheck(80));
-        // environment.healthChecks().register("unhealthy", new
-        // AlwaysUnhealthyHealthCheck());
     }
 }
