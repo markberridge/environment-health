@@ -7,4 +7,8 @@ server:
       port: 8881
 
 testMode: true
-cacheDuration: 2 seconds
+cacheDuration: 10 seconds
+
+proxyClientConfig: 
+   connectionTimeout : 4 seconds
+   timeout : 4 seconds

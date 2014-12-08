@@ -16,4 +16,5 @@ Environment Configuration
 Configure the list of environments in the JSON file `environments.json`
 
 
+
 By default, the application is available at http://localhost:8880/health/
