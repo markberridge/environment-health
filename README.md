@@ -7,7 +7,7 @@ environment-health
 
 A dropwizard and angular application to monitor yammer metrics health checks.
 
-See [environment-health](http://markberridge.github.io/environment-health/src/main/resources/app/?mode=stubbed) in action.
+[See environment-health in action](http://markberridge.github.io/environment-health/src/main/resources/app/?mode=stubbed) in stubbed mode on the project GitHub Page.
 
 Application Configuration
 -------------------------
