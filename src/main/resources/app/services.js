@@ -1,21 +1,30 @@
 "use strict";
 
-environmentsApp.factory('configService', ['$http', function($http) {
+environmentsApp.factory('configService', ['restService', function(restService) {
   var service = {};
   service.get = function() {
-    return $http.get('/config/');
+    return restService.get('/config/');
   };
   return service;
 }]);
 
+environmentsApp.factory('restService', ['$http', function($http) {
+  var service = {};
+  service.get = function(url) {
+    return $http.get(url);
+  };
+  return service;
+}]);
+
+
 // http://embed.plnkr.co/fSIm8B/script.js
-environmentsApp.factory('healthService', ['$http', '$interval', '$q', function($http, $interval, $q) {
+environmentsApp.factory('healthService', ['restService', '$interval', '$q', function(restService, $interval, $q) {
   var service = {};
   service.check = function(url) {
 
     var deferred = $q.defer();
     var execute = function() {
-      $http.get('/proxy/?url=' + url).then(function(response) {
+      restService.get('/proxy/?url=' + url).then(function(response) {
         deferred.notify(response);
       }, function(response) {
         deferred.notify(response);
@@ -39,9 +48,9 @@ environmentsApp.factory('pollingService', ['$rootScope', 'configService', 'healt
           this.healthchecks = healthchecks;
           this.fellIll = fellIll;
           this.getTimeIll = function(){
-          	return !healthy  ? new Date() - this.fellIll : 0;
+          	return !this.healthy  ? new Date() - this.fellIll : 0;
           }
-          this.warning = this.getTimeIll() < 30000;
+          this.warning = !this.healthy && (this.getTimeIll() < 30000);
         }
 
 		var getEnvStatus = function(env) {
@@ -118,3 +127,50 @@ environmentsApp.factory('pollingService', ['$rootScope', 'configService', 'healt
       return data;
     }};
 }]);
+
+
+if(window.location.href.indexOf("?mode=stubbed") > -1){
+	//Stub the api calls to provide demo functionality
+	environmentsApp.factory('restService', ['$q', function($q) {
+	  var service = {};
+	  service.get = function(url) {
+	    if(url.indexOf("/config") > -1){
+		    var response = 
+		    { data: { "environments": [
+		              {"name": "TX01", "applications": [{"name": "One","url": "http://localhost:8880/health1"}, {"name": "Two","url": "http://localhost:8880/health2"}]},
+		              {"name": "TX02", "applications": [{"name": "Three","url": "http://localhost:8880/health3"}, {"name": "Four","url": "http://localhost:8880/health4"}, {"name": "Five","url": "http://localhost:8880/health5"}]},
+		              {"name": "TX03", "applications": [{"name": "Six","url": "http://localhost:8880/unhealthy"}]}
+		              ],
+		              "links": [{"name": "Wiki", "url": "http://www.wiki.com"},{"name": "Jenkins","url": "http://www.jenkins.com"}]},
+		      status: 200
+		    }
+	    }
+	    if(url.indexOf("/health") > -1){
+		    var number = Math.floor((Math.random() * 100) + 1);
+		    var success = number < 81;
+		    var response = 
+		    { data: {"randomHealthCheck5":{"healthy":success,"message": (number + "/80")}},
+		      status: success ? 200 : 500
+		    }
+	    }
+	    if(url.indexOf("/unhealthy") > -1){
+		    var response = 
+		    { data: {"healthyHealthCheck":{"healthy":true,"message": ("12/80")}, "unHealthyHealthCheck":{ "healthy": false,
+        "message": "Error!",
+        "error": {
+            "message": "Error!",
+            "stack": [
+                "uk.co.markberridge.environment.health.dummyChecks.AlwaysUnhealthyHealthCheck.check(AlwaysUnhealthyHealthCheck.java:16)",
+                "com.codahale.metrics.health.HealthCheck.execute(HealthCheck.java:172)", "..."
+                ]}}},
+		      status: 500
+		    }
+	    }
+	    var deferred = $q.defer();
+		deferred.resolve(response);
+	    return deferred.promise;
+	  };
+	    
+	  return service;
+	}]);
+}
