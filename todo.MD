@@ -1,11 +1,13 @@
-ODO:
+TODO:
 
-* Issue with last updated date - it's blank on toggling view until next update
 * Externalize css
-* move to minimize safe injection
+* Add Tests
+* build system for minification/tests etc?
 
 Done:
 
+* move to minimize safe injection
+* Issue with last updated date - it's blank on toggling view until next update
 * Externalise urls 
 * Added separate CSS file to allow externalizing 
 * Splitted out two separate views on two separate routes

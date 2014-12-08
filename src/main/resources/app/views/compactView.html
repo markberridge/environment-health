@@ -1,4 +1,5 @@
 <div class="container theme-showcase" role="main">
+   <p data-ng-if="updated" class="small pull-right" style="margin-top: 3em">last updated: {{updated | date:'yyyy-MM-dd HH:mm:ss'}}</p>
    <h2 class="page-header" >Environments</h2>
    <span ng-repeat="env in data.environments"> 
    <a style="margin-bottom: .5em;" ng-click="env.show = !env.show" class="btn btn-lg" 
@@ -20,5 +21,4 @@
    </div>
    <br />
    <br />
-   <p style="margin-top: 2em">last updated: {{updated | date:'yyyy-MM-dd HH:mm:ss'}}</p>
 </div>

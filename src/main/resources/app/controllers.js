@@ -27,7 +27,7 @@ environmentsApp.run(['pollingService', function (pollingService){
 
 }]);
 
-environmentsApp.controller('NavCtrl', function($scope, $modal, $location, configService) {
+environmentsApp.controller('NavCtrl', ['$scope', '$modal', '$location', 'configService', function($scope, $modal, $location, configService) {
     $scope.compactView = $location.path().indexOf('compact') > -1;
     $scope.toggleView = function() {
                           $scope.compactView = $location.path().indexOf('compact') < 0;
@@ -36,39 +36,37 @@ environmentsApp.controller('NavCtrl', function($scope, $modal, $location, config
     configService.get().then(function(result) {
       $scope.links = result.data.links;
 	});
-});
+}]);
 
-environmentsApp
-    .controller(
-        'EnvironmentsCtrl',
-        function($rootScope, $scope, $modal, healthService, pollingService) {
-          $scope.data = pollingService.getData();
-          $scope.updated = pollingService.updated;
-          
-          $scope.open = function(env, app) {
-            var modalInstance = $modal.open({
-              templateUrl : 'views/appModal.html',
-              scope : $scope,
-              controller : ModalInstanceCtrl,
-              size : 'lg',
-              resolve : {
-                env : function() {
-                  return env;
-                },
-                app : function() {
-                  return app;
-                }
-              }
-            });
-          };
-          
-          $scope.$on('app-update', function(event, args){
-               $scope.updated = args.updated;
-               $scope.data = args.data;
-		  });
-        });
+environmentsApp.controller('EnvironmentsCtrl', ['$rootScope', '$scope', '$modal', 'healthService', 'pollingService', 
+function($rootScope, $scope, $modal, healthService, pollingService) {
+  $scope.data = pollingService.getData();
+  $scope.updated = pollingService.updated;
+  
+  $scope.open = function(env, app) {
+    var modalInstance = $modal.open({
+      templateUrl : 'views/appModal.html',
+      scope : $scope,
+      controller : 'AppModalCtrl',
+      size : 'lg',
+      resolve : {
+        env : function() {
+          return env;
+        },
+        app : function() {
+          return app;
+        }
+      }
+    });
+  };
+  
+  $scope.$on('app-update', function(event, args){
+       $scope.updated = args.updated;
+       $scope.data = args.data;
+  });
+}]);
 
-var ModalInstanceCtrl = function($scope, $modalInstance, env, app) {
+environmentsApp.controller('AppModalCtrl', ['$scope', '$modalInstance', 'env', 'app', function ($scope, $modalInstance, env, app) {
   $scope.env = env;
   $scope.app = app;
   $scope.time = new Date();
@@ -80,4 +78,5 @@ var ModalInstanceCtrl = function($scope, $modalInstance, env, app) {
 	  $scope.time = args.updated;
   	}
   });
-};
+}]);
+
