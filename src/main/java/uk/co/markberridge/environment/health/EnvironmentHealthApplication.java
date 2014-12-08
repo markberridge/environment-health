@@ -44,7 +44,7 @@ public class EnvironmentHealthApplication extends Application<HealthConfiguratio
     @Override
     public void run(HealthConfiguration config, Environment environment) throws Exception {
 
-        Client client = new JerseyClientBuilder(environment).build("proxyClient");
+        Client client = new JerseyClientBuilder(environment).using(config.getProxyClientConfig()).build("proxyClient");
 
         // Services
         ProxyService proxyService = new ProxyService(environment.metrics(), client, config.getCacheDuration());
