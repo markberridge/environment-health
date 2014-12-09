@@ -9,6 +9,6 @@
     {"name": "One",   "url": "http://localhost:8880/health6"},
     {"name": "Two",   "url": "http://localhost:8880/health7"}]}],
  "links": [
-    {"name": "Wiki",    "url": "http://www.wiki.com"},
-    {"name": "Jenkins", "url": "http://www.jenkins.com"},
-    {"name": "Jira",    "url": "http://www.jira.com"}]}
+    {"name": "Wiki",    "url": "http://www.mediawiki.org/"},
+    {"name": "Jenkins", "url": "http://jenkins-ci.org/"},
+    {"name": "Jira",    "url": "http://jira.atlassian.com/"}]}
