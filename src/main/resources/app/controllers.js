@@ -28,10 +28,10 @@ environmentsApp.run(['pollingService', function (pollingService){
 }]);
 
 environmentsApp.controller('NavCtrl', ['$scope', '$modal', '$location', 'configService', function($scope, $modal, $location, configService) {
-    $scope.compactView = $location.path().indexOf('compact') > -1;
+    $scope.expandedView = $location.path().indexOf('exploded') >= 0;
     $scope.toggleView = function() {
-                          $scope.compactView = $location.path().indexOf('compact') < 0;
-                          $location.path($scope.compactView ? '/compact' : '/exploded');
+                          $scope.expandedView = $location.path().indexOf('exploded') < 0;
+                          $location.path($scope.expandedView ? '/exploded' : '/compact');
                         };
     configService.get().then(function(result) {
       $scope.links = result.data.links;
