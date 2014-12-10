@@ -130,32 +130,38 @@ environmentsApp.factory('pollingService', ['$rootScope', 'configService', 'healt
 
 
 if(window.location.href.indexOf("?mode=stubbed") > -1){
-	//Stub the api calls to provide demo functionality
+	//Stub the API calls to provide demo functionality
 	environmentsApp.factory('restService', ['$q', function($q) {
 	  var service = {};
 	  service.get = function(url) {
 	    if(url.indexOf("/config") > -1){
 		    var response = 
 		    { data: { "environments": [
-		              {"name": "TX01", "applications": [{"name": "One","url": "http://localhost:8880/health1"}, {"name": "Two","url": "http://localhost:8880/health2"}]},
-		              {"name": "TX02", "applications": [{"name": "Three","url": "http://localhost:8880/health3"}, {"name": "Four","url": "http://localhost:8880/health4"}, {"name": "Five","url": "http://localhost:8880/health5"}]},
-		              {"name": "TX03", "applications": [{"name": "Six","url": "http://localhost:8880/unhealthy"}]}
+		              {"name": "Env1 (healthy)", "applications": [{"name": "1A","url": "http://localhost:8880/healthy"}, {"name": "1B","url": "http://localhost:8880/healthy"}, {"name": "1C","url": "http://localhost:8880/healthy"}]},
+		              {"name": "Env2 (fluctuating)", "applications": [{"name": "2A","url": "http://localhost:8880/random"}, {"name": "2B","url": "http://localhost:8880/random"}, {"name": "2C","url": "http://localhost:8880/random"}]},
+		              {"name": "Env3 (unhealthy)", "applications": [{"name": "3A","url": "http://localhost:8880/unhealthy"}, {"name": "3B","url": "http://localhost:8880/healthy"}, {"name": "3C","url": "http://localhost:8880/healthy"}]}
 		              ],
 		              "links": [{"name": "Wiki", "url": "http://www.mediawiki.org/"},{"name": "Jenkins","url": "http://jenkins-ci.org/"}]},
 		      status: 200
 		    }
 	    }
-	    if(url.indexOf("/health") > -1){
+	    if(url.indexOf("/healthy") > -1) {
+		    var response = 
+		    { data: {"healthyHealthCheck":{"healthy":true, "message":"I am healthy"}},
+		      status: 200
+		    }
+	    }
+	    else if(url.indexOf("/random") > -1) {
 		    var number = Math.floor((Math.random() * 100) + 1);
 		    var success = number < 81;
 		    var response = 
-		    { data: {"randomHealthCheck5":{"healthy":success,"message": (number + "/80")}},
+		    { data: {"randomHealthCheck":{"healthy":success, "message":(number + "/80")}},
 		      status: success ? 200 : 500
 		    }
 	    }
-	    if(url.indexOf("/unhealthy") > -1){
+	    else if(url.indexOf("/unhealthy") > -1) {
 		    var response = 
-		    { data: {"healthyHealthCheck":{"healthy":true,"message": ("12/80")}, "unHealthyHealthCheck":{ "healthy": false,
+		    { data: {"healthyHealthCheck":{"healthy":true, "message":"I am healthy"}, "unhealthyHealthCheck":{ "healthy":false,
         "message": "Error!",
         "error": {
             "message": "Error!",
