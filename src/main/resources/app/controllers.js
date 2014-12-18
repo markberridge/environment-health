@@ -23,19 +23,18 @@ environmentsApp.config(['$routeProvider',
   }]);
 
 environmentsApp.run(['pollingService', function (pollingService){
-	pollingService.startPolling();
-
+  pollingService.startPolling();
 }]);
 
 environmentsApp.controller('NavCtrl', ['$scope', '$modal', '$location', 'configService', function($scope, $modal, $location, configService) {
     $scope.expandedView = $location.path().indexOf('exploded') >= 0;
     $scope.toggleView = function() {
-                          $scope.expandedView = $location.path().indexOf('exploded') < 0;
-                          $location.path($scope.expandedView ? '/exploded' : '/compact');
-                        };
+      $scope.expandedView = $location.path().indexOf('exploded') < 0;
+      $location.path($scope.expandedView ? '/exploded' : '/compact');
+    };
     configService.get().then(function(result) {
       $scope.links = result.data.links;
-	});
+    });
 }]);
 
 environmentsApp.controller('EnvironmentsCtrl', ['$rootScope', '$scope', '$modal', 'healthService', 'pollingService', 
@@ -61,8 +60,8 @@ function($rootScope, $scope, $modal, healthService, pollingService) {
   };
   
   $scope.$on('app-update', function(event, args){
-       $scope.updated = args.updated;
-       $scope.data = args.data;
+    $scope.updated = args.updated;
+    $scope.data = args.data;
   });
 }]);
 
@@ -73,10 +72,10 @@ environmentsApp.controller('AppModalCtrl', ['$scope', '$modalInstance', 'env', '
   $scope.$on('app-update', function(event, args){
     var updateIsForThisApplication = args.env.name == env.name && args.app.name == app.name;
     if(updateIsForThisApplication){
-	  $scope.app = args.app;
-	  $scope.env = args.env;
-	  $scope.time = args.updated;
-  	}
+      $scope.app = args.app;
+      $scope.env = args.env;
+      $scope.time = args.updated;
+    }
   });
 }]);
 
