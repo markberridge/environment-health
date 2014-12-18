@@ -69,13 +69,13 @@ environmentsApp.controller('AppModalCtrl', ['$scope', '$modalInstance', 'env', '
   $scope.env = env;
   $scope.app = app;
   $scope.time = new Date();
-  $scope.$on('app-update', function(event, args){
-    var updateIsForThisApplication = args.env.name == env.name && args.app.name == app.name;
-    if(updateIsForThisApplication){
-      $scope.app = args.app;
-      $scope.env = args.env;
-      $scope.time = args.updated;
-    }
-  });
+  //$scope.$on('app-update', function(event, args){
+  //  var updateIsForThisApplication = args.env.name == env.name && args.app.name == app.name;
+  //  if(updateIsForThisApplication){
+  //    $scope.app = args.app;
+  //    $scope.env = args.env;
+  //    $scope.time = args.updated;
+  //  }
+  //});
 }]);
 
