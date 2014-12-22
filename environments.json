@@ -11,4 +11,5 @@
  "links": [
     {"name": "Wiki",    "url": "http://www.mediawiki.org/"},
     {"name": "Jenkins", "url": "http://jenkins-ci.org/"},
-    {"name": "Jira",    "url": "http://jira.atlassian.com/"}]}
+    {"name": "Jira",    "url": "http://jira.atlassian.com/"}]
+}
