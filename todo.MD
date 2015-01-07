@@ -1,6 +1,9 @@
 TODO:
 
+* Report server proxy not available
+* Create a ping health check
 * Externalize css
+* Separate configuration from envrionments
 * Add Tests
 * build system for minification/tests etc?
 
